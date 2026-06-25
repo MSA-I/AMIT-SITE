@@ -1,112 +1,91 @@
-import { useRef } from 'react';
-import {
-  motion,
-  useMotionValue,
-  useSpring,
-  useTransform,
-  useScroll,
-  useReducedMotion,
-} from 'framer-motion';
-import { ArrowUpRight } from 'lucide-react';
+import { useRef, useLayoutEffect } from 'react';
 import { useI18n } from '../../i18n/context';
-import { Container, Rule, btnSolid, btnGhost, LangLink } from '../ui';
+import { Container, Eyebrow, EdgeLabel, btnSolid, btnLine, LangLink } from '../ui';
+import { gsap, prefersReduced, useParallax } from '../../motion/anim';
+import { scrollToEl } from '../../motion/smooth';
 
 const HERO_IMG = '/projects/modern-penthouse/01.webp';
 
 export default function Hero() {
-  const { t } = useI18n();
-  const reduce = useReducedMotion();
-  const ref = useRef<HTMLDivElement>(null);
+  const { t, lang } = useI18n();
+  const headRef = useRef<HTMLHeadingElement>(null);
+  const imgRef = useParallax<HTMLImageElement>(60);
 
-  const mx = useMotionValue(0);
-  const my = useMotionValue(0);
-  const sx = useSpring(mx, { stiffness: 90, damping: 20, mass: 0.4 });
-  const sy = useSpring(my, { stiffness: 90, damping: 20, mass: 0.4 });
-  const rotateY = useTransform(sx, [-0.5, 0.5], [5, -5]);
-  const rotateX = useTransform(sy, [-0.5, 0.5], [-5, 5]);
-
-  const { scrollY } = useScroll();
-  const imgY = useTransform(scrollY, [0, 700], [0, -50]);
-
-  const onMove = (e: React.MouseEvent) => {
-    if (reduce || !ref.current) return;
-    const r = ref.current.getBoundingClientRect();
-    mx.set((e.clientX - r.left) / r.width - 0.5);
-    my.set((e.clientY - r.top) / r.height - 0.5);
-  };
-  const onLeave = () => {
-    mx.set(0);
-    my.set(0);
-  };
+  useLayoutEffect(() => {
+    const el = headRef.current;
+    if (!el || prefersReduced()) return;
+    const lines = el.querySelectorAll<HTMLElement>('[data-l]');
+    const ctx = gsap.context(() => {
+      gsap.set(el, { autoAlpha: 1 });
+      gsap.from(lines, {
+        yPercent: 115,
+        duration: 1.1,
+        ease: 'power3.out',
+        stagger: 0.12,
+        delay: 0.35,
+      });
+    }, el);
+    return () => ctx.revert();
+  }, []);
 
   return (
-    <section className="relative flex min-h-[100dvh] items-center overflow-hidden bg-bg pt-24 pb-16 md:pt-28">
-      {/* faint architectural grid */}
-      <div
-        className="pointer-events-none absolute inset-0 opacity-[0.4] [mask-image:radial-gradient(ellipse_at_center,black_30%,transparent_80%)]"
-        style={{
-          backgroundImage:
-            'linear-gradient(#e4e1dc 1px, transparent 1px), linear-gradient(90deg, #e4e1dc 1px, transparent 1px)',
-          backgroundSize: '88px 88px',
-        }}
-        aria-hidden
-      />
+    <section className="relative min-h-[100dvh] overflow-hidden bg-cream" data-theme="cream">
+      {/* full-bleed image */}
+      <div className="absolute inset-y-0 end-0 h-full w-full overflow-hidden md:w-[42%]">
+        <img
+          ref={imgRef}
+          src={HERO_IMG}
+          alt={`${t.hero.name} - ${t.hero.role}`}
+          className="absolute inset-0 h-[118%] w-full -translate-y-[8%] object-cover"
+          loading="eager"
+          fetchPriority="high"
+        />
+        <div className="absolute inset-0 bg-cream/30 md:hidden" />
+      </div>
 
-      <Container className="relative grid grid-cols-1 items-center gap-12 md:grid-cols-12 md:gap-8">
-        <div className="md:col-span-6">
-          <motion.div
-            initial={reduce ? false : { opacity: 0, y: 22 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-          >
-            <span className="inline-flex items-center gap-3 text-[12px] font-medium uppercase tracking-[0.28em] text-copper">
-              <Rule className="w-10" />
-              {t.hero.role}
-            </span>
+      <Container className="relative flex min-h-[100dvh] flex-col justify-center pt-28 pb-20">
+        <Eyebrow className="text-ink">{t.hero.role}</Eyebrow>
 
-            <h1 className="mt-6 font-display text-6xl font-medium leading-[0.95] tracking-tight text-ink md:text-8xl">
-              {t.hero.name}
-            </h1>
-
-            <p className="mt-6 max-w-md text-lg leading-relaxed text-muted">{t.hero.intro}</p>
-
-            <div className="mt-9 flex flex-wrap items-center gap-4">
-              <LangLink to="/contact" className={btnSolid}>
-                {t.hero.ctaPrimary}
-                <ArrowUpRight className="h-4 w-4" />
-              </LangLink>
-              <LangLink to="/portfolio" className={btnGhost}>
-                {t.hero.ctaSecondary}
-              </LangLink>
-            </div>
-          </motion.div>
-        </div>
-
-        <div ref={ref} onMouseMove={onMove} onMouseLeave={onLeave} className="md:col-span-6">
-          <motion.div
-            initial={reduce ? false : { opacity: 0, scale: 0.96 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
-            style={{ perspective: 1000 }}
-          >
-            <motion.div
-              style={reduce ? undefined : { rotateX, rotateY, y: imgY, transformStyle: 'preserve-3d' }}
-              className="relative"
+        <h1
+          ref={headRef}
+          className="mt-7 max-w-[14ch] font-sans text-[15vw] font-semibold uppercase leading-[0.86] tracking-[-0.02em] text-ink md:text-[8.5rem] lg:text-[9.5rem]"
+        >
+          <span className="block overflow-hidden pb-[0.08em]">
+            <span data-l className="inline-block will-change-transform">{t.hero.h1}</span>
+          </span>
+          <span className="block overflow-hidden pb-[0.08em]">
+            <span data-l className="inline-block will-change-transform">{t.hero.h2}</span>
+          </span>
+          <span className="block overflow-hidden pb-[0.12em]">
+            <span
+              data-l
+              className={`inline-block font-display normal-case will-change-transform ${lang === 'en' ? 'italic' : 'font-normal'}`}
             >
-              <div className="absolute inset-0 translate-x-4 translate-y-4 border border-copper/40 rtl:-translate-x-4" aria-hidden />
-              <img
-                src={HERO_IMG}
-                alt={t.hero.name + ' - ' + t.hero.role}
-                width={1200}
-                height={1500}
-                loading="eager"
-                fetchPriority="high"
-                className="relative aspect-[4/5] w-full object-cover"
-              />
-            </motion.div>
-          </motion.div>
+              {t.hero.emph}
+            </span>
+          </span>
+        </h1>
+
+        <p className="mt-8 max-w-md text-lg leading-relaxed text-ink-soft">{t.hero.intro}</p>
+
+        <div className="mt-9 flex flex-wrap items-center gap-8">
+          <LangLink to="/contact" className={btnSolid} data-cursor>
+            {t.hero.ctaPrimary}
+          </LangLink>
+          <a
+            href="#work"
+            onClick={(e) => { e.preventDefault(); scrollToEl('#work'); }}
+            className={btnLine}
+            data-cursor
+          >
+            {t.hero.ctaSecondary}
+          </a>
         </div>
       </Container>
+
+      <EdgeLabel className="pointer-events-none absolute end-5 top-1/2 -translate-y-1/2 text-ink/80">
+        {t.hero.name}
+      </EdgeLabel>
     </section>
   );
 }

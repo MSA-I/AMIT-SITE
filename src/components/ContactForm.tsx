@@ -2,11 +2,11 @@ import { useState } from 'react';
 import { Check } from 'lucide-react';
 import { useI18n } from '../i18n/context';
 import { waLink, EMAIL } from '../lib/paths';
-import { btnCopper } from './ui';
+import { btnSolid } from './ui';
 
 const field =
-  'w-full border-b border-line bg-transparent py-3 text-ink placeholder:text-muted/70 focus:border-copper focus:outline-none transition-colors';
-const label = 'mb-1.5 block text-xs uppercase tracking-[0.16em] text-muted';
+  'w-full border-b border-ink/20 bg-transparent py-3 text-ink placeholder:text-ink-soft/60 focus:border-sage focus:outline-none transition-colors';
+const label = 'mb-1.5 block u-label text-ink-soft';
 
 export default function ContactForm() {
   const { t } = useI18n();
@@ -34,12 +34,12 @@ export default function ContactForm() {
 
   if (sent) {
     return (
-      <div className="flex flex-col items-start gap-4 border border-line bg-surface p-8">
-        <span className="flex h-12 w-12 items-center justify-center rounded-full bg-copper/10 text-copper">
+      <div className="flex flex-col items-start gap-4 border border-line bg-paper p-8">
+        <span className="flex h-12 w-12 items-center justify-center rounded-full bg-sage/15 text-sage">
           <Check className="h-6 w-6" />
         </span>
         <p className="text-lg text-ink">{f.success}</p>
-        <a href={`mailto:${EMAIL}`} className="text-sm text-copper hover:underline">
+        <a href={`mailto:${EMAIL}`} className="text-sm text-sage hover:underline" data-cursor>
           {EMAIL}
         </a>
       </div>
@@ -72,9 +72,9 @@ export default function ContactForm() {
         <label className={label} htmlFor="cf-msg">{f.message}</label>
         <textarea id="cf-msg" rows={4} className={field + ' resize-none'} value={data.message} onChange={set('message')} dir="auto" />
       </div>
-      {err && <p className="text-sm text-copper-deep sm:col-span-2">{err}</p>}
+      {err && <p className="text-sm text-sage sm:col-span-2">{err}</p>}
       <div className="sm:col-span-2">
-        <button type="submit" className={btnCopper}>{f.submit}</button>
+        <button type="submit" className={btnSolid} data-cursor>{f.submit}</button>
       </div>
     </form>
   );

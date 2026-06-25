@@ -1,52 +1,86 @@
 import { useI18n } from '../../i18n/context';
-import { Container, Section, Heading, Reveal } from '../ui';
+import { Container, Eyebrow } from '../ui';
+import { Reveal, RevealText, useParallax } from '../../motion/anim';
 
-const ambientByKey: Record<string, string> = {
+const AMBIENT: Record<string, string> = {
   concrete: '/projects/luxury-apartment/05.webp',
   wood: '/projects/private-villa/04.webp',
   vegetation: '/projects/modern-home/03.webp',
   brass: '/projects/modern-penthouse/07.webp',
 };
 
-export default function Materials() {
-  const { t } = useI18n();
-  const m = t.materials;
+function MaterialRow({
+  index,
+  name,
+  src,
+  flip,
+}: {
+  index: string;
+  name: string;
+  src: string;
+  flip: boolean;
+}) {
+  const imgRef = useParallax<HTMLImageElement>(40);
 
   return (
-    <Section id="materials">
+    <Reveal className="grid grid-cols-1 items-center gap-8 border-t border-cream/15 py-14 md:grid-cols-12 md:gap-14 md:py-24">
+      {/* Index + material name */}
+      <div className={`md:col-span-6 ${flip ? 'md:order-last' : ''}`}>
+        <span className="block font-display text-lg leading-none tabular-nums text-cream/40">
+          {index}
+        </span>
+        <h3 className="mt-4 font-display text-6xl leading-[0.9] tracking-tight md:text-8xl">
+          {name}
+        </h3>
+      </div>
+
+      {/* Ambient photo with scroll parallax */}
+      <div className="overflow-hidden md:col-span-6">
+        <img
+          ref={imgRef}
+          src={src}
+          alt={name}
+          width={1200}
+          height={900}
+          loading="lazy"
+          className="aspect-[4/3] w-full scale-110 object-cover"
+        />
+      </div>
+    </Reveal>
+  );
+}
+
+export default function Materials() {
+  const { t } = useI18n();
+
+  return (
+    <section data-theme="ink" className="bg-ink py-28 text-cream md:py-40">
       <Container>
-        <Heading eyebrow={m.eyebrow} title={m.heading} sub={m.note} />
+        <div className="max-w-3xl">
+          <Eyebrow>{t.materials.eyebrow}</Eyebrow>
+          <RevealText
+            text={t.materials.heading}
+            className="mt-6 font-display text-5xl leading-[0.95] tracking-tight md:text-7xl"
+          />
+          <Reveal delay={0.1}>
+            <p className="mt-7 max-w-xl text-base leading-relaxed text-cream/70 md:text-lg">
+              {t.materials.note}
+            </p>
+          </Reveal>
+        </div>
 
-        <div className="mt-12 grid grid-cols-1 border-s border-t border-line md:mt-16 md:grid-cols-2">
-          {m.items.map((item, i) => {
-            const ambient = ambientByKey[item.key];
-            return (
-              <Reveal key={item.key} delay={i * 0.06}>
-                <div className="group relative flex min-h-[200px] flex-col justify-between overflow-hidden border-e border-b border-line bg-surface p-8 md:min-h-[260px] md:p-10">
-                  {ambient ? (
-                    <>
-                      <div
-                        aria-hidden
-                        className="absolute inset-0 bg-cover bg-center"
-                        style={{ backgroundImage: `url(${ambient})` }}
-                      />
-                      <div aria-hidden className="absolute inset-0 bg-bg/80" />
-                    </>
-                  ) : null}
-
-                  <span className="relative font-display text-sm tracking-[0.35em] text-copper">
-                    {String(i + 1).padStart(2, '0')}
-                  </span>
-
-                  <h3 className="relative mt-auto font-display text-2xl text-ink md:text-4xl">
-                    {item.name}
-                  </h3>
-                </div>
-              </Reveal>
-            );
-          })}
+        <div className="mt-16 md:mt-24">
+          {t.materials.items.map((item, i) => (
+            <MaterialRow
+              key={item.key}
+              index={String(i + 1).padStart(2, '0')}
+              name={item.name}
+              src={AMBIENT[item.key]}
+              flip={i % 2 === 1}
+            />
+          ))}
         </div>
       </Container>
-    </Section>
+    </section>
   );
 }

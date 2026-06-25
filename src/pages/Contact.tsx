@@ -6,12 +6,14 @@ export default function Contact() {
   const { t, lang } = useI18n();
 
   return (
-    <div className="pt-16 md:pt-20">
+    <>
       <Seo
         title={lang === 'he' ? 'צור קשר - עמית בר' : 'Contact - Amit Bar'}
         description={t.contact.sub}
       />
-      <ContactSection />
-    </div>
+      <div className="pt-24 md:pt-28">
+        <ContactSection />
+      </div>
+    </>
   );
 }

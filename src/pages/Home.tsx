@@ -1,17 +1,18 @@
 import { useI18n } from '../i18n/context';
 import Seo from '../components/Seo';
 import Hero from '../components/sections/Hero';
+import Manifesto from '../components/sections/Manifesto';
 import About from '../components/sections/About';
-import PortfolioStrip from '../components/sections/PortfolioStrip';
-import Process from '../components/sections/Process';
-import Materials from '../components/sections/Materials';
+import Values from '../components/sections/Values';
+import SelectedWork from '../components/sections/SelectedWork';
 import Services from '../components/sections/Services';
+import Materials from '../components/sections/Materials';
+import Process from '../components/sections/Process';
 import Testimonials from '../components/sections/Testimonials';
 import ContactSection from '../components/sections/ContactSection';
 
 export default function Home() {
   const { t, lang } = useI18n();
-
   return (
     <>
       <Seo
@@ -19,11 +20,13 @@ export default function Home() {
         description={t.hero.intro}
       />
       <Hero />
+      <Manifesto />
       <About />
-      <PortfolioStrip />
-      <Process />
-      <Materials />
+      <Values />
+      <SelectedWork />
       <Services />
+      <Materials />
+      <Process />
       <Testimonials />
       <ContactSection />
     </>

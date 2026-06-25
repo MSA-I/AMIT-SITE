@@ -58,7 +58,7 @@ export default function Lightbox({ images, index, alt, onClose, onIndex }: Props
         <button
           onClick={onClose}
           aria-label="Close"
-          className="absolute end-4 top-4 z-10 flex h-11 w-11 items-center justify-center rounded-full text-bg/80 ring-1 ring-bg/20 transition-colors hover:text-bg"
+          className="absolute end-4 top-4 z-10 flex h-11 w-11 items-center justify-center rounded-full text-cream/80 ring-1 ring-cream/20 transition-colors hover:text-bg"
         >
           <X className="h-5 w-5" />
         </button>
@@ -66,14 +66,14 @@ export default function Lightbox({ images, index, alt, onClose, onIndex }: Props
         <button
           onClick={(e) => { e.stopPropagation(); go(-1); }}
           aria-label="Previous"
-          className="absolute start-3 z-10 flex h-12 w-12 items-center justify-center rounded-full text-bg/80 ring-1 ring-bg/20 transition-colors hover:text-bg md:start-8"
+          className="absolute start-3 z-10 flex h-12 w-12 items-center justify-center rounded-full text-cream/80 ring-1 ring-cream/20 transition-colors hover:text-bg md:start-8"
         >
           <Prev className="h-6 w-6" />
         </button>
         <button
           onClick={(e) => { e.stopPropagation(); go(1); }}
           aria-label="Next"
-          className="absolute end-3 z-10 flex h-12 w-12 items-center justify-center rounded-full text-bg/80 ring-1 ring-bg/20 transition-colors hover:text-bg md:end-8"
+          className="absolute end-3 z-10 flex h-12 w-12 items-center justify-center rounded-full text-cream/80 ring-1 ring-cream/20 transition-colors hover:text-bg md:end-8"
         >
           <Next className="h-6 w-6" />
         </button>
@@ -96,7 +96,7 @@ export default function Lightbox({ images, index, alt, onClose, onIndex }: Props
           transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
         />
 
-        <span className="absolute bottom-5 text-sm tabular-nums tracking-widest text-bg/70" dir="ltr">
+        <span className="absolute bottom-5 text-sm tabular-nums tracking-widest text-cream/70" dir="ltr">
           {index + 1} / {total}
         </span>
       </motion.div>

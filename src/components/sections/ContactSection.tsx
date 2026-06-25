@@ -1,96 +1,82 @@
-import { MessageCircle, Phone, Mail, Instagram } from 'lucide-react';
 import { useI18n } from '../../i18n/context';
-import { Container, Section, Heading, Reveal } from '../ui';
+import { Container, Eyebrow } from '../ui';
+import { Reveal, RevealText } from '../../motion/anim';
 import ContactForm from '../ContactForm';
 import { waLink, PHONE, PHONE_DISPLAY, EMAIL, INSTAGRAM, INSTAGRAM_HANDLE } from '../../lib/paths';
+
+type ContactLink = {
+  key: string;
+  label: string;
+  href: string;
+  /** force LTR on latin/numeric values so they read correctly inside an RTL layout */
+  ltr?: boolean;
+  external?: boolean;
+};
 
 export default function ContactSection() {
   const { t } = useI18n();
 
-  const rows = [
-    {
-      key: 'whatsapp',
-      Icon: MessageCircle,
-      label: t.contact.whatsapp,
-      href: waLink(t.contact.whatsappMessage),
-      external: true,
-    },
-    {
-      key: 'phone',
-      Icon: Phone,
-      label: PHONE_DISPLAY,
-      href: `tel:${PHONE}`,
-      ltr: true,
-    },
-    {
-      key: 'email',
-      Icon: Mail,
-      label: EMAIL,
-      href: `mailto:${EMAIL}`,
-      ltr: true,
-    },
-    {
-      key: 'instagram',
-      Icon: Instagram,
-      label: INSTAGRAM_HANDLE,
-      href: INSTAGRAM,
-      external: true,
-    },
+  const links: ContactLink[] = [
+    { key: 'phone', label: PHONE_DISPLAY, href: `tel:${PHONE}`, ltr: true },
+    { key: 'email', label: EMAIL, href: `mailto:${EMAIL}`, ltr: true },
+    { key: 'whatsapp', label: t.contact.whatsapp, href: waLink(t.contact.whatsappMessage), external: true },
+    { key: 'instagram', label: INSTAGRAM_HANDLE, href: INSTAGRAM, ltr: true, external: true },
   ];
 
   return (
-    <Section id="contact">
+    <section id="contact" data-theme="cream" className="bg-cream py-28 text-ink md:py-40">
       <Container>
-        <div className="grid gap-12 md:grid-cols-2 md:gap-16">
+        <Reveal>
+          <Eyebrow>{t.contact.eyebrow}</Eyebrow>
+        </Reveal>
+
+        <RevealText
+          text={t.contact.heading}
+          as="h2"
+          className="mt-7 font-display text-6xl leading-[0.95] md:text-8xl"
+        />
+
+        <Reveal delay={0.05}>
+          <p className="mt-7 max-w-xl text-lg leading-relaxed text-ink-soft">{t.contact.sub}</p>
+        </Reveal>
+
+        <div className="mt-16 grid gap-14 md:mt-20 md:grid-cols-2 md:gap-16">
+          {/* start column - direct contact lines */}
           <Reveal>
-            <div>
-              <Heading
-                eyebrow={t.contact.eyebrow}
-                title={t.contact.heading}
-                sub={t.contact.sub}
-              />
-
-              <ul className="mt-10 flex flex-col gap-4">
-                {rows.map(({ key, Icon, label, href, external, ltr }) => (
-                  <li key={key}>
-                    <a
-                      href={href}
-                      {...(external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
-                      className="group flex items-center gap-3 text-ink transition-colors hover:text-copper"
-                    >
-                      <span className="flex h-10 w-10 shrink-0 items-center justify-center border border-line text-copper transition-colors group-hover:border-copper">
-                        <Icon className="h-4 w-4" aria-hidden="true" />
-                      </span>
-                      {ltr ? (
-                        <span dir="ltr" className="text-start">
-                          {label}
-                        </span>
-                      ) : (
-                        <span>{label}</span>
-                      )}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-
-              <div className="mt-8 flex flex-wrap gap-2">
-                {t.contact.consultTypes.map((type) => (
-                  <span
-                    key={type}
-                    className="border border-line px-3 py-1 text-xs uppercase tracking-wider text-muted"
+            <ul className="flex flex-col gap-5">
+              {links.map(({ key, label, href, ltr, external }) => (
+                <li key={key}>
+                  <a
+                    href={href}
+                    data-cursor
+                    {...(external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+                    className="group inline-flex items-center gap-3.5 text-xl text-ink transition-colors hover:text-sage"
                   >
-                    {type}
-                  </span>
-                ))}
-              </div>
+                    <span className="accent-dot shrink-0" />
+                    {ltr ? <span dir="ltr">{label}</span> : <span>{label}</span>}
+                  </a>
+                </li>
+              ))}
+            </ul>
+
+            <div className="mt-10 flex flex-wrap gap-3">
+              {t.contact.consultTypes.map((type) => (
+                <span
+                  key={type}
+                  className="u-label rounded-full border border-line px-4 py-2 text-ink-soft"
+                >
+                  {type}
+                </span>
+              ))}
             </div>
           </Reveal>
 
+          {/* end column - lead form */}
           <Reveal delay={0.1}>
             <ContactForm />
           </Reveal>
         </div>
       </Container>
-    </Section>
+    </section>
   );
 }

@@ -1,89 +1,146 @@
 @import 'tailwindcss';
 
 /* ============================================================
-   Amit Bar - Architectural Mono + Accent design system
-   Light theme locked. One copper accent. Sharp/architectural.
+   Amit Bar v2 - editorial-kinetic, near-monochrome
+   Cream / ink / paper + a single tiny sage accent.
    ============================================================ */
 @theme {
-  --color-bg: #f8f8f8;        /* page background */
-  --color-surface: #ffffff;   /* cards / elevated */
-  --color-ink: #232323;       /* primary text (WCAG AA on bg) */
-  --color-muted: #6b6b6b;     /* secondary text */
-  --color-line: #e4e1dc;      /* hairlines / borders */
-  --color-copper: #9a5f29;    /* single accent - AA-contrast copper for text + UI */
-  --color-copper-deep: #7d4d20;
+  --color-cream: #f2eee6;     /* primary background */
+  --color-ink: #0e0e0e;       /* primary foreground */
+  --color-ink-soft: #4a4742;  /* muted text */
+  --color-paper: #ffffff;     /* light panels */
+  --color-line: #d9d4c8;      /* hairlines on cream */
+  --color-sage: #6e8b7b;      /* the one tiny accent (dots, ®, marks) */
 
-  --font-display: 'Jost', 'Heebo', sans-serif;
-  --font-body: 'Archivo', 'Heebo', sans-serif;
-  --font-he: 'Heebo', sans-serif;
-
-  --radius-card: 2px;
+  --font-serif: 'Bodoni Moda', Georgia, serif;       /* LTR display */
+  --font-sans: 'Archivo', system-ui, sans-serif;     /* LTR ui/labels */
+  --font-he-serif: 'Frank Ruhl Libre', serif;        /* RTL display */
+  --font-he-sans: 'Heebo', system-ui, sans-serif;    /* RTL ui/labels */
 
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-io: cubic-bezier(0.65, 0, 0.35, 1);
 }
 
 @layer base {
   html {
-    scroll-behavior: smooth;
     -webkit-text-size-adjust: 100%;
+  }
+  /* Lenis drives scrolling; native smooth-scroll off to avoid conflicts */
+  html.lenis,
+  html.lenis body {
+    height: auto;
+  }
+  .lenis.lenis-smooth {
+    scroll-behavior: auto !important;
+  }
+
+  :root[dir='ltr'] {
+    --display: var(--font-serif);
+    --ui: var(--font-sans);
+  }
+  :root[dir='rtl'] {
+    --display: var(--font-he-serif);
+    --ui: var(--font-he-sans);
   }
 
   body {
     margin: 0;
-    background-color: var(--color-bg);
+    background-color: var(--color-cream);
     color: var(--color-ink);
-    font-family: var(--font-body);
+    font-family: var(--ui);
+    font-weight: 400;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     overflow-x: hidden;
   }
 
-  h1, h2, h3, h4, h5, h6 {
-    font-family: var(--font-display);
-    font-weight: 500;
-    letter-spacing: -0.01em;
+  .font-display {
+    font-family: var(--display);
   }
-
-  /* Hebrew (RTL): Heebo for everything, slightly looser leading */
-  :root[dir='rtl'] body,
+  h1, h2, h3, h4 {
+    font-family: var(--display);
+    font-weight: 500;
+    letter-spacing: -0.015em;
+  }
   :root[dir='rtl'] h1,
   :root[dir='rtl'] h2,
-  :root[dir='rtl'] h3,
-  :root[dir='rtl'] h4 {
-    font-family: var(--font-he);
+  :root[dir='rtl'] h3 {
     letter-spacing: 0;
   }
   :root[dir='rtl'] p,
   :root[dir='rtl'] li {
     line-height: 1.85;
   }
-  :root[dir='ltr'] p,
-  :root[dir='ltr'] li {
-    line-height: 1.7;
-  }
 
   ::selection {
-    background-color: var(--color-copper);
-    color: #ffffff;
+    background-color: var(--color-ink);
+    color: var(--color-cream);
   }
 
-  ::-webkit-scrollbar { width: 10px; }
-  ::-webkit-scrollbar-track { background: var(--color-bg); }
-  ::-webkit-scrollbar-thumb {
-    background: #cfcac2;
-    border-radius: 0;
-  }
-  ::-webkit-scrollbar-thumb:hover { background: var(--color-copper); }
-
-  /* Focus visibility (a11y) */
   :focus-visible {
-    outline: 2px solid var(--color-copper);
+    outline: 2px solid var(--color-sage);
     outline-offset: 3px;
   }
+
+  ::-webkit-scrollbar { width: 0; height: 0; }
+}
+
+@layer components {
+  /* small uppercase label */
+  .u-label {
+    font-family: var(--font-sans);
+    text-transform: uppercase;
+    letter-spacing: 0.22em;
+    font-size: 0.7rem;
+    font-weight: 500;
+  }
+  :root[dir='rtl'] .u-label {
+    font-family: var(--font-he-sans);
+    letter-spacing: 0.18em;
+  }
+
+  /* vertical rotated edge label */
+  .edge-label {
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+  }
+
+  /* the single accent dot */
+  .accent-dot {
+    display: inline-block;
+    width: 0.4em;
+    height: 0.4em;
+    border-radius: 9999px;
+    background: var(--color-sage);
+    vertical-align: middle;
+  }
+}
+
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-100%); }
+}
+
+/* Custom cursor follower (desktop, fine-pointer, motion-ok only) */
+.cursor-dot {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 90;
+  pointer-events: none;
+  mix-blend-mode: difference;
+  background: #fff;
+  border-radius: 9999px;
+  will-change: transform;
+}
+
+@media (hover: none), (pointer: coarse) {
+  .cursor-dot { display: none !important; }
 }
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
+  .cursor-dot { display: none !important; }
   *, *::before, *::after {
     animation-duration: 0.001ms !important;
     animation-iteration-count: 1 !important;

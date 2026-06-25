@@ -1,60 +1,71 @@
 import { useI18n } from '../../i18n/context';
-import { Container, Section, Heading, Reveal } from '../ui';
+import { Container, EdgeLabel } from '../ui';
+import { Reveal, RevealText, useParallax } from '../../motion/anim';
 
 const ABOUT_IMG = '/projects/private-villa/03.webp';
 
 export default function About() {
   const { t } = useI18n();
+  const imgRef = useParallax<HTMLImageElement>(60);
 
   return (
-    <Section id="about" className="bg-bg">
-      <Container className="grid grid-cols-1 items-start gap-12 lg:grid-cols-12 lg:gap-16">
-        {/* Image column (portrait-feel) */}
-        <Reveal className="lg:col-span-5 lg:order-last">
-          <div className="relative">
-            <div
-              className="absolute inset-0 translate-x-4 translate-y-4 border border-copper/40 rtl:-translate-x-4"
-              aria-hidden
-            />
-            <img
-              src={ABOUT_IMG}
-              alt={t.about.heading}
-              width={1200}
-              height={1500}
-              loading="lazy"
-              className="relative aspect-[4/5] w-full object-cover"
-            />
-          </div>
+    <section
+      id="about"
+      data-theme="ink"
+      className="relative min-h-screen overflow-hidden bg-ink py-28 text-cream md:py-40"
+    >
+      <EdgeLabel className="pointer-events-none absolute end-4 top-28 text-cream/80 md:end-8 md:top-40">
+        {t.about.eyebrow}
+      </EdgeLabel>
+
+      <Container>
+        <RevealText
+          as="h2"
+          text={t.about.heading}
+          className="max-w-5xl font-display text-6xl leading-[0.92] text-cream md:text-8xl"
+        />
+
+        <Reveal y={36} delay={0.05}>
+          <p className="mt-12 max-w-4xl font-display text-2xl leading-snug text-cream md:mt-16 md:text-4xl">
+            {t.about.style}
+          </p>
         </Reveal>
 
-        {/* Text column */}
-        <Reveal delay={0.1} className="lg:col-span-7">
-          <Heading eyebrow={t.about.eyebrow} title={t.about.heading} />
-
-          <div className="mt-8 flex max-w-prose flex-col gap-5 text-base leading-relaxed text-muted md:text-lg">
-            <p>{t.about.journey}</p>
-            <p>{t.about.style}</p>
-          </div>
+        <div className="mt-20 grid grid-cols-1 gap-12 md:mt-32 md:grid-cols-12 md:gap-16">
+          {/* Parallax portrait */}
+          <Reveal as="figure" className="md:col-span-6 lg:col-span-7">
+            <div className="relative aspect-[4/5] overflow-hidden bg-cream/5">
+              <img
+                ref={imgRef}
+                src={ABOUT_IMG}
+                alt={t.about.heading}
+                loading="lazy"
+                className="absolute inset-0 h-[115%] w-full -translate-y-[6%] object-cover"
+              />
+            </div>
+          </Reveal>
 
           {/* Values */}
-          <p className="mt-12 text-[11px] font-medium uppercase tracking-[0.22em] text-muted">
-            {t.about.valuesHeading}
-          </p>
-          <ul className="mt-5 border-t border-line">
-            {t.about.values.map((value, i) => (
-              <li
-                key={i}
-                className="flex items-baseline gap-5 border-b border-line py-5"
-              >
-                <span className="font-display text-sm font-medium tabular-nums text-copper">
-                  {String(i + 1).padStart(2, '0')}
-                </span>
-                <span className="text-lg font-medium text-ink">{value}</span>
-              </li>
-            ))}
-          </ul>
-        </Reveal>
+          <div className="md:col-span-6 lg:col-span-5">
+            <p className="u-label text-cream/70">{t.about.valuesHeading}</p>
+            <ul className="mt-8 border-t border-cream/15">
+              {t.about.values.map((value, i) => (
+                <Reveal
+                  key={i}
+                  as="li"
+                  delay={i * 0.08}
+                  className="flex items-baseline gap-6 border-b border-cream/15 py-6 md:py-7"
+                >
+                  <span className="font-display text-base tabular-nums text-cream/50">
+                    {String(i + 1).padStart(2, '0')}
+                  </span>
+                  <span className="text-2xl leading-snug text-cream">{value}</span>
+                </Reveal>
+              ))}
+            </ul>
+          </div>
+        </div>
       </Container>
-    </Section>
+    </section>
   );
 }

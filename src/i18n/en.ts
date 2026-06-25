@@ -13,11 +13,16 @@ export const en: Dict = {
     services: 'Services',
     contact: 'Contact',
     book: "Let's meet",
+    menu: 'Menu',
+    close: 'Close',
   },
 
   hero: {
     name: 'Amit Bar',
     role: 'Interior Designer',
+    h1: 'Turning space',
+    h2: 'into a work of',
+    emph: 'art',
     intro: 'A boutique studio for interior planning and design - luxury apartments, private homes and commercial spaces.',
     ctaPrimary: "Let's meet",
     ctaSecondary: 'View work',

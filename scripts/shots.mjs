@@ -9,9 +9,7 @@ const shots = [
   { name: 'he-home', path: '/he', w: 1440, h: 900, full: true },
   { name: 'he-home-mobile', path: '/he', w: 390, h: 844, full: true },
   { name: 'en-home', path: '/en', w: 1440, h: 900, full: true },
-  { name: 'he-portfolio', path: '/he/portfolio', w: 1440, h: 900, full: true },
   { name: 'he-project', path: '/he/portfolio/modern-penthouse', w: 1440, h: 900, full: true },
-  { name: 'en-project', path: '/en/portfolio/luxury-apartment', w: 1440, h: 900, full: true },
   { name: 'he-contact', path: '/he/contact', w: 1440, h: 900, full: true },
   { name: 'en-home-hero', path: '/en', w: 1440, h: 900, full: false },
 ];

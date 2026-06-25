@@ -1,36 +1,13 @@
 import { useEffect } from 'react';
 import { Outlet, useParams, useLocation, Navigate } from 'react-router-dom';
 import { LanguageProvider, isLang, useI18n } from '../i18n/context';
-import Navbar from './Navbar';
+import Menu from './Menu';
 import Footer from './Footer';
-import StickyContact from './StickyContact';
+import Cursor from './Cursor';
+import IntroLoader from './IntroLoader';
+import PageTransition from './PageTransition';
+import { useSmoothScroll, resetScroll } from '../motion/smooth';
 import { PHONE, EMAIL, INSTAGRAM } from '../lib/paths';
-
-function ScrollToTop() {
-  const { pathname } = useLocation();
-  useEffect(() => {
-    window.scrollTo({ top: 0, behavior: 'instant' as ScrollBehavior });
-  }, [pathname]);
-  return null;
-}
-
-// One visually-hidden <h1> per sub-page (home has its own visible h1 in the hero).
-function RouteH1() {
-  const { t } = useI18n();
-  const { pathname } = useLocation();
-  const seg = pathname.replace(/^\/(he|en)\/?/, '').split('/')[0];
-  if (!seg) return null;
-  const map: Record<string, string> = {
-    portfolio: t.portfolio.heading,
-    about: t.about.heading,
-    services: t.services.heading,
-    process: t.process.heading,
-    contact: t.contact.heading,
-    privacy: t.legal.privacyHeading,
-    accessibility: t.legal.accessibilityHeading,
-  };
-  return <h1 className="sr-only">{map[seg] ?? t.hero.name}</h1>;
-}
 
 const JSONLD = {
   '@context': 'https://schema.org',
@@ -43,12 +20,28 @@ const JSONLD = {
   image: 'https://abdesigner.co.il/projects/modern-penthouse/01.webp',
   areaServed: 'IL',
   sameAs: [INSTAGRAM],
-  description:
-    'Boutique interior design studio - luxury apartments, private homes and commercial spaces.',
+  description: 'Boutique interior design studio - luxury apartments, private homes and commercial spaces.',
 };
+
+// Visually-hidden per-page <h1> (home supplies its own visible h1 in the hero).
+function RouteH1() {
+  const { t } = useI18n();
+  const { pathname } = useLocation();
+  const seg = pathname.replace(/^\/(he|en)\/?/, '').split('/')[0];
+  if (!seg) return null;
+  const map: Record<string, string> = {
+    portfolio: t.portfolio.heading,
+    contact: t.contact.heading,
+    privacy: t.legal.privacyHeading,
+    accessibility: t.legal.accessibilityHeading,
+  };
+  return <h1 className="sr-only">{map[seg] ?? t.hero.name}</h1>;
+}
 
 export default function Layout() {
   const { lang } = useParams();
+  const { pathname } = useLocation();
+  useSmoothScroll();
 
   useEffect(() => {
     const id = 'ld-json';
@@ -60,18 +53,23 @@ export default function Layout() {
     document.head.appendChild(s);
   }, []);
 
+  useEffect(() => {
+    resetScroll();
+  }, [pathname]);
+
   if (!isLang(lang)) return <Navigate to="/he" replace />;
 
   return (
     <LanguageProvider lang={lang}>
-      <ScrollToTop />
-      <Navbar />
+      <IntroLoader />
+      <PageTransition />
+      <Cursor />
+      <Menu />
       <main id="main">
         <RouteH1 />
         <Outlet />
       </main>
       <Footer />
-      <StickyContact />
     </LanguageProvider>
   );
 }
