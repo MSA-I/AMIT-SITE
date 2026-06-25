@@ -10,13 +10,15 @@ export default function IntroLoader() {
   useEffect(() => {
     const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (reduce || sessionStorage.getItem(KEY)) return;
-    sessionStorage.setItem(KEY, '1');
     setShow(true);
     document.documentElement.style.overflow = 'hidden';
+    // NOTE: set the session flag only AFTER the timer fires, so React StrictMode's
+    // mount/unmount/remount in dev re-establishes the dismiss timer instead of skipping it.
     const t = setTimeout(() => {
+      sessionStorage.setItem(KEY, '1');
       setShow(false);
       document.documentElement.style.overflow = '';
-    }, 1700);
+    }, 1600);
     return () => {
       clearTimeout(t);
       document.documentElement.style.overflow = '';
