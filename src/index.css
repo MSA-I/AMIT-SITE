@@ -1,0 +1,92 @@
+@import 'tailwindcss';
+
+/* ============================================================
+   Amit Bar - Architectural Mono + Accent design system
+   Light theme locked. One copper accent. Sharp/architectural.
+   ============================================================ */
+@theme {
+  --color-bg: #f8f8f8;        /* page background */
+  --color-surface: #ffffff;   /* cards / elevated */
+  --color-ink: #232323;       /* primary text (WCAG AA on bg) */
+  --color-muted: #6b6b6b;     /* secondary text */
+  --color-line: #e4e1dc;      /* hairlines / borders */
+  --color-copper: #9a5f29;    /* single accent - AA-contrast copper for text + UI */
+  --color-copper-deep: #7d4d20;
+
+  --font-display: 'Jost', 'Heebo', sans-serif;
+  --font-body: 'Archivo', 'Heebo', sans-serif;
+  --font-he: 'Heebo', sans-serif;
+
+  --radius-card: 2px;
+
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    margin: 0;
+    background-color: var(--color-bg);
+    color: var(--color-ink);
+    font-family: var(--font-body);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-display);
+    font-weight: 500;
+    letter-spacing: -0.01em;
+  }
+
+  /* Hebrew (RTL): Heebo for everything, slightly looser leading */
+  :root[dir='rtl'] body,
+  :root[dir='rtl'] h1,
+  :root[dir='rtl'] h2,
+  :root[dir='rtl'] h3,
+  :root[dir='rtl'] h4 {
+    font-family: var(--font-he);
+    letter-spacing: 0;
+  }
+  :root[dir='rtl'] p,
+  :root[dir='rtl'] li {
+    line-height: 1.85;
+  }
+  :root[dir='ltr'] p,
+  :root[dir='ltr'] li {
+    line-height: 1.7;
+  }
+
+  ::selection {
+    background-color: var(--color-copper);
+    color: #ffffff;
+  }
+
+  ::-webkit-scrollbar { width: 10px; }
+  ::-webkit-scrollbar-track { background: var(--color-bg); }
+  ::-webkit-scrollbar-thumb {
+    background: #cfcac2;
+    border-radius: 0;
+  }
+  ::-webkit-scrollbar-thumb:hover { background: var(--color-copper); }
+
+  /* Focus visibility (a11y) */
+  :focus-visible {
+    outline: 2px solid var(--color-copper);
+    outline-offset: 3px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}

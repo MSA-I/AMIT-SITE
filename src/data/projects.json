@@ -1,0 +1,336 @@
+[
+  {
+    "slug": "modern-penthouse",
+    "titleHe": "פנטהאוז מודרני",
+    "titleEn": "Modern Penthouse",
+    "category": "residential",
+    "cover": "/projects/modern-penthouse/01.webp",
+    "images": [
+      {
+        "full": "/projects/modern-penthouse/01.webp",
+        "thumb": "/projects/modern-penthouse/01-thumb.webp"
+      },
+      {
+        "full": "/projects/modern-penthouse/02.webp",
+        "thumb": "/projects/modern-penthouse/02-thumb.webp"
+      },
+      {
+        "full": "/projects/modern-penthouse/03.webp",
+        "thumb": "/projects/modern-penthouse/03-thumb.webp"
+      },
+      {
+        "full": "/projects/modern-penthouse/04.webp",
+        "thumb": "/projects/modern-penthouse/04-thumb.webp"
+      },
+      {
+        "full": "/projects/modern-penthouse/05.webp",
+        "thumb": "/projects/modern-penthouse/05-thumb.webp"
+      },
+      {
+        "full": "/projects/modern-penthouse/06.webp",
+        "thumb": "/projects/modern-penthouse/06-thumb.webp"
+      },
+      {
+        "full": "/projects/modern-penthouse/07.webp",
+        "thumb": "/projects/modern-penthouse/07-thumb.webp"
+      },
+      {
+        "full": "/projects/modern-penthouse/08.webp",
+        "thumb": "/projects/modern-penthouse/08-thumb.webp"
+      },
+      {
+        "full": "/projects/modern-penthouse/09.webp",
+        "thumb": "/projects/modern-penthouse/09-thumb.webp"
+      },
+      {
+        "full": "/projects/modern-penthouse/10.webp",
+        "thumb": "/projects/modern-penthouse/10-thumb.webp"
+      },
+      {
+        "full": "/projects/modern-penthouse/11.webp",
+        "thumb": "/projects/modern-penthouse/11-thumb.webp"
+      },
+      {
+        "full": "/projects/modern-penthouse/12.webp",
+        "thumb": "/projects/modern-penthouse/12-thumb.webp"
+      },
+      {
+        "full": "/projects/modern-penthouse/13.webp",
+        "thumb": "/projects/modern-penthouse/13-thumb.webp"
+      },
+      {
+        "full": "/projects/modern-penthouse/14.webp",
+        "thumb": "/projects/modern-penthouse/14-thumb.webp"
+      },
+      {
+        "full": "/projects/modern-penthouse/15.webp",
+        "thumb": "/projects/modern-penthouse/15-thumb.webp"
+      },
+      {
+        "full": "/projects/modern-penthouse/16.webp",
+        "thumb": "/projects/modern-penthouse/16-thumb.webp"
+      }
+    ]
+  },
+  {
+    "slug": "luxury-apartment",
+    "titleHe": "דירת יוקרה",
+    "titleEn": "Luxury Apartment",
+    "category": "residential",
+    "cover": "/projects/luxury-apartment/01.webp",
+    "images": [
+      {
+        "full": "/projects/luxury-apartment/01.webp",
+        "thumb": "/projects/luxury-apartment/01-thumb.webp"
+      },
+      {
+        "full": "/projects/luxury-apartment/02.webp",
+        "thumb": "/projects/luxury-apartment/02-thumb.webp"
+      },
+      {
+        "full": "/projects/luxury-apartment/03.webp",
+        "thumb": "/projects/luxury-apartment/03-thumb.webp"
+      },
+      {
+        "full": "/projects/luxury-apartment/04.webp",
+        "thumb": "/projects/luxury-apartment/04-thumb.webp"
+      },
+      {
+        "full": "/projects/luxury-apartment/05.webp",
+        "thumb": "/projects/luxury-apartment/05-thumb.webp"
+      },
+      {
+        "full": "/projects/luxury-apartment/06.webp",
+        "thumb": "/projects/luxury-apartment/06-thumb.webp"
+      },
+      {
+        "full": "/projects/luxury-apartment/07.webp",
+        "thumb": "/projects/luxury-apartment/07-thumb.webp"
+      },
+      {
+        "full": "/projects/luxury-apartment/08.webp",
+        "thumb": "/projects/luxury-apartment/08-thumb.webp"
+      },
+      {
+        "full": "/projects/luxury-apartment/09.webp",
+        "thumb": "/projects/luxury-apartment/09-thumb.webp"
+      },
+      {
+        "full": "/projects/luxury-apartment/10.webp",
+        "thumb": "/projects/luxury-apartment/10-thumb.webp"
+      },
+      {
+        "full": "/projects/luxury-apartment/11.webp",
+        "thumb": "/projects/luxury-apartment/11-thumb.webp"
+      },
+      {
+        "full": "/projects/luxury-apartment/12.webp",
+        "thumb": "/projects/luxury-apartment/12-thumb.webp"
+      },
+      {
+        "full": "/projects/luxury-apartment/13.webp",
+        "thumb": "/projects/luxury-apartment/13-thumb.webp"
+      },
+      {
+        "full": "/projects/luxury-apartment/14.webp",
+        "thumb": "/projects/luxury-apartment/14-thumb.webp"
+      },
+      {
+        "full": "/projects/luxury-apartment/15.webp",
+        "thumb": "/projects/luxury-apartment/15-thumb.webp"
+      },
+      {
+        "full": "/projects/luxury-apartment/16.webp",
+        "thumb": "/projects/luxury-apartment/16-thumb.webp"
+      },
+      {
+        "full": "/projects/luxury-apartment/17.webp",
+        "thumb": "/projects/luxury-apartment/17-thumb.webp"
+      },
+      {
+        "full": "/projects/luxury-apartment/18.webp",
+        "thumb": "/projects/luxury-apartment/18-thumb.webp"
+      }
+    ]
+  },
+  {
+    "slug": "private-villa",
+    "titleHe": "וילה פרטית",
+    "titleEn": "Private Villa",
+    "category": "residential",
+    "cover": "/projects/private-villa/01.webp",
+    "images": [
+      {
+        "full": "/projects/private-villa/01.webp",
+        "thumb": "/projects/private-villa/01-thumb.webp"
+      },
+      {
+        "full": "/projects/private-villa/02.webp",
+        "thumb": "/projects/private-villa/02-thumb.webp"
+      },
+      {
+        "full": "/projects/private-villa/03.webp",
+        "thumb": "/projects/private-villa/03-thumb.webp"
+      },
+      {
+        "full": "/projects/private-villa/04.webp",
+        "thumb": "/projects/private-villa/04-thumb.webp"
+      },
+      {
+        "full": "/projects/private-villa/05.webp",
+        "thumb": "/projects/private-villa/05-thumb.webp"
+      },
+      {
+        "full": "/projects/private-villa/06.webp",
+        "thumb": "/projects/private-villa/06-thumb.webp"
+      },
+      {
+        "full": "/projects/private-villa/07.webp",
+        "thumb": "/projects/private-villa/07-thumb.webp"
+      },
+      {
+        "full": "/projects/private-villa/08.webp",
+        "thumb": "/projects/private-villa/08-thumb.webp"
+      },
+      {
+        "full": "/projects/private-villa/09.webp",
+        "thumb": "/projects/private-villa/09-thumb.webp"
+      },
+      {
+        "full": "/projects/private-villa/10.webp",
+        "thumb": "/projects/private-villa/10-thumb.webp"
+      },
+      {
+        "full": "/projects/private-villa/11.webp",
+        "thumb": "/projects/private-villa/11-thumb.webp"
+      },
+      {
+        "full": "/projects/private-villa/12.webp",
+        "thumb": "/projects/private-villa/12-thumb.webp"
+      },
+      {
+        "full": "/projects/private-villa/13.webp",
+        "thumb": "/projects/private-villa/13-thumb.webp"
+      },
+      {
+        "full": "/projects/private-villa/14.webp",
+        "thumb": "/projects/private-villa/14-thumb.webp"
+      },
+      {
+        "full": "/projects/private-villa/15.webp",
+        "thumb": "/projects/private-villa/15-thumb.webp"
+      }
+    ]
+  },
+  {
+    "slug": "modern-home",
+    "titleHe": "בית מודרני",
+    "titleEn": "Modern Home",
+    "category": "residential",
+    "cover": "/projects/modern-home/01.webp",
+    "images": [
+      {
+        "full": "/projects/modern-home/01.webp",
+        "thumb": "/projects/modern-home/01-thumb.webp"
+      },
+      {
+        "full": "/projects/modern-home/02.webp",
+        "thumb": "/projects/modern-home/02-thumb.webp"
+      },
+      {
+        "full": "/projects/modern-home/03.webp",
+        "thumb": "/projects/modern-home/03-thumb.webp"
+      },
+      {
+        "full": "/projects/modern-home/04.webp",
+        "thumb": "/projects/modern-home/04-thumb.webp"
+      },
+      {
+        "full": "/projects/modern-home/05.webp",
+        "thumb": "/projects/modern-home/05-thumb.webp"
+      },
+      {
+        "full": "/projects/modern-home/06.webp",
+        "thumb": "/projects/modern-home/06-thumb.webp"
+      },
+      {
+        "full": "/projects/modern-home/07.webp",
+        "thumb": "/projects/modern-home/07-thumb.webp"
+      },
+      {
+        "full": "/projects/modern-home/08.webp",
+        "thumb": "/projects/modern-home/08-thumb.webp"
+      },
+      {
+        "full": "/projects/modern-home/09.webp",
+        "thumb": "/projects/modern-home/09-thumb.webp"
+      },
+      {
+        "full": "/projects/modern-home/10.webp",
+        "thumb": "/projects/modern-home/10-thumb.webp"
+      }
+    ]
+  },
+  {
+    "slug": "urban-apartment",
+    "titleHe": "דירה עירונית",
+    "titleEn": "Urban Apartment",
+    "category": "spaces",
+    "cover": "/projects/urban-apartment/01.webp",
+    "images": [
+      {
+        "full": "/projects/urban-apartment/01.webp",
+        "thumb": "/projects/urban-apartment/01-thumb.webp"
+      },
+      {
+        "full": "/projects/urban-apartment/02.webp",
+        "thumb": "/projects/urban-apartment/02-thumb.webp"
+      },
+      {
+        "full": "/projects/urban-apartment/03.webp",
+        "thumb": "/projects/urban-apartment/03-thumb.webp"
+      },
+      {
+        "full": "/projects/urban-apartment/04.webp",
+        "thumb": "/projects/urban-apartment/04-thumb.webp"
+      },
+      {
+        "full": "/projects/urban-apartment/05.webp",
+        "thumb": "/projects/urban-apartment/05-thumb.webp"
+      },
+      {
+        "full": "/projects/urban-apartment/06.webp",
+        "thumb": "/projects/urban-apartment/06-thumb.webp"
+      },
+      {
+        "full": "/projects/urban-apartment/07.webp",
+        "thumb": "/projects/urban-apartment/07-thumb.webp"
+      },
+      {
+        "full": "/projects/urban-apartment/08.webp",
+        "thumb": "/projects/urban-apartment/08-thumb.webp"
+      }
+    ]
+  },
+  {
+    "slug": "selected-spaces",
+    "titleHe": "חללים נבחרים",
+    "titleEn": "Selected Spaces",
+    "category": "spaces",
+    "cover": "/projects/selected-spaces/03.webp",
+    "images": [
+      {
+        "full": "/projects/selected-spaces/03.webp",
+        "thumb": "/projects/selected-spaces/03-thumb.webp"
+      },
+      {
+        "full": "/projects/selected-spaces/05.webp",
+        "thumb": "/projects/selected-spaces/05-thumb.webp"
+      },
+      {
+        "full": "/projects/selected-spaces/06.webp",
+        "thumb": "/projects/selected-spaces/06-thumb.webp"
+      }
+    ]
+  }
+]
