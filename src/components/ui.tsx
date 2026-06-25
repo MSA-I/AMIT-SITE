@@ -60,3 +60,33 @@ const base =
 export const btnSolid = `${base} rounded-full bg-ink px-7 py-3.5 text-cream hover:bg-sage`;
 export const btnLine =
   'group relative inline-flex items-center gap-2 u-label text-ink transition-colors hover:text-sage';
+
+/**
+ * SlideLabel - button text-slide effect (pure CSS, direction-agnostic).
+ * Wrap the parent button/link with class "group".
+ * At rest: first copy visible; on group-hover: first slides out to -100% y,
+ * second slides in from +100% y.
+ *
+ * Usage:
+ *   <button className={`${btnSolid} group overflow-hidden`}>
+ *     <SlideLabel>Contact us</SlideLabel>
+ *   </button>
+ */
+export const SlideLabel: React.FC<{ children: React.ReactNode; className?: string }> = ({
+  children,
+  className = '',
+}) => (
+  <span className={`relative inline-block overflow-hidden leading-none align-middle ${className}`}>
+    {/* first copy - visible at rest, exits upward on group-hover */}
+    <span className="block transition-transform duration-500 ease-[cubic-bezier(0.76,0,0.24,1)] group-hover:-translate-y-full">
+      {children}
+    </span>
+    {/* second copy - overlaid in the same 1-line box, enters from below on group-hover */}
+    <span
+      aria-hidden="true"
+      className="absolute inset-0 block translate-y-full transition-transform duration-500 ease-[cubic-bezier(0.76,0,0.24,1)] group-hover:translate-y-0"
+    >
+      {children}
+    </span>
+  </span>
+);

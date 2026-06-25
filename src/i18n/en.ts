@@ -147,6 +147,12 @@ export const en: Dict = {
     consultTypes: ['In person', 'Zoom'],
   },
 
+  cta: {
+    eyebrow: 'Begin the journey',
+    heading: 'Unlock your dream space',
+    button: 'Start the conversation',
+  },
+
   footer: {
     tagline: 'Interior design - luxury apartments, private homes and commercial spaces.',
     nav: 'Navigation',

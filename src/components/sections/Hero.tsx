@@ -48,18 +48,18 @@ export default function Hero() {
 
         <h1
           ref={headRef}
-          className="mt-7 max-w-[14ch] font-sans text-[15vw] font-semibold uppercase leading-[0.86] tracking-[-0.02em] text-ink md:text-[8.5rem] lg:text-[9.5rem]"
+          className="mt-7 max-w-[15ch] font-display text-[12vw] font-light leading-[0.95] tracking-[-0.01em] text-ink md:text-[8rem] lg:text-[9rem]"
         >
-          <span className="block overflow-hidden pb-[0.08em]">
+          <span className="block overflow-hidden pb-[0.06em]">
             <span data-l className="inline-block will-change-transform">{t.hero.h1}</span>
           </span>
-          <span className="block overflow-hidden pb-[0.08em]">
+          <span className="block overflow-hidden pb-[0.06em]">
             <span data-l className="inline-block will-change-transform">{t.hero.h2}</span>
           </span>
           <span className="block overflow-hidden pb-[0.12em]">
             <span
               data-l
-              className={`inline-block font-display normal-case will-change-transform ${lang === 'en' ? 'italic' : 'font-normal'}`}
+              className={`inline-block will-change-transform ${lang === 'en' ? 'italic' : 'font-normal'}`}
             >
               {t.hero.emph}
             </span>

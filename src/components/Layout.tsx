@@ -1,5 +1,6 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Outlet, useParams, useLocation, Navigate } from 'react-router-dom';
+import { AnimatePresence, motion } from 'framer-motion';
 import { LanguageProvider, isLang, useI18n } from '../i18n/context';
 import Menu from './Menu';
 import Footer from './Footer';
@@ -7,6 +8,7 @@ import Cursor from './Cursor';
 import IntroLoader from './IntroLoader';
 import PageTransition from './PageTransition';
 import { useSmoothScroll, resetScroll } from '../motion/smooth';
+import { ScrollTrigger } from '../motion/anim';
 import { PHONE, EMAIL, INSTAGRAM } from '../lib/paths';
 
 const JSONLD = {
@@ -30,7 +32,8 @@ function RouteH1() {
   const seg = pathname.replace(/^\/(he|en)\/?/, '').split('/')[0];
   if (!seg) return null;
   const map: Record<string, string> = {
-    portfolio: t.portfolio.heading,
+    about: t.about.heading,
+    // portfolio index + detail pages render their own visible <h1>, so no sr-only one here
     contact: t.contact.heading,
     privacy: t.legal.privacyHeading,
     accessibility: t.legal.accessibilityHeading,
@@ -42,6 +45,10 @@ export default function Layout() {
   const { lang } = useParams();
   const { pathname } = useLocation();
   useSmoothScroll();
+  // Read synchronously so the first paint picks the correct branch (no remount flip).
+  const [reduce] = useState(
+    () => typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  );
 
   useEffect(() => {
     const id = 'ld-json';
@@ -57,6 +64,14 @@ export default function Layout() {
     resetScroll();
   }, [pathname]);
 
+  // Refresh ScrollTrigger once the freshly mounted page is laid out, so its
+  // scroll-driven sections measure against the new DOM (not the old route).
+  useEffect(() => {
+    if (!reduce) return;
+    const id = window.requestAnimationFrame(() => ScrollTrigger.refresh());
+    return () => window.cancelAnimationFrame(id);
+  }, [pathname, reduce]);
+
   if (!isLang(lang)) return <Navigate to="/he" replace />;
 
   return (
@@ -67,7 +82,25 @@ export default function Layout() {
       <Menu />
       <main id="main">
         <RouteH1 />
-        <Outlet />
+        {reduce ? (
+          // Reduced motion: no enter/leave sequencing, content static + visible.
+          <Outlet />
+        ) : (
+          // Swup-like enter/leave: outgoing page exits before the incoming
+          // mounts, masked by the <PageTransition/> ink curtain.
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={pathname}
+              initial={{ opacity: 0, y: 24 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -24 }}
+              transition={{ duration: 0.4, ease: [0.76, 0, 0.24, 1] }}
+              onAnimationComplete={() => ScrollTrigger.refresh()}
+            >
+              <Outlet />
+            </motion.div>
+          </AnimatePresence>
+        )}
       </main>
       <Footer />
     </LanguageProvider>

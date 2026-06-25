@@ -3,13 +3,14 @@ import { useNavigate, useLocation, NavLink } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useI18n, type Lang } from '../i18n/context';
 import { localePath, PHONE_DISPLAY, PHONE, EMAIL, INSTAGRAM, INSTAGRAM_HANDLE, waLink } from '../lib/paths';
-import { scrollToEl, stopScroll } from '../motion/smooth';
+import { stopScroll } from '../motion/smooth';
+import { LangLink } from './ui';
 
-const sectionItems = [
-  { key: 'portfolio', id: 'work' },
-  { key: 'about', id: 'about' },
-  { key: 'process', id: 'process' },
-  { key: 'services', id: 'services' },
+// Primary navigation: three page destinations mirroring the reference.
+const navItems = [
+  { key: 'about', to: '/about' },
+  { key: 'portfolio', to: '/portfolio' },
+  { key: 'contact', to: '/contact' },
 ] as const;
 
 export default function Menu() {
@@ -18,7 +19,6 @@ export default function Menu() {
   const loc = useLocation();
   const [open, setOpen] = useState(false);
   const [dark, setDark] = useState(false);
-  const onHome = loc.pathname === `/${lang}`;
 
   useEffect(() => {
     stopScroll(open);
@@ -41,16 +41,6 @@ export default function Menu() {
     secs.forEach((s) => io.observe(s));
     return () => io.disconnect();
   }, [loc.pathname]);
-
-  const goSection = (id: string) => {
-    setOpen(false);
-    if (onHome) {
-      scrollToEl(`#${id}`);
-    } else {
-      nav(localePath(lang));
-      setTimeout(() => scrollToEl(`#${id}`), 500);
-    }
-  };
 
   const other: Lang = lang === 'he' ? 'en' : 'he';
   const switchLang = () => {
@@ -91,34 +81,24 @@ export default function Menu() {
             </div>
 
             <nav aria-label={t.nav.menu} className="mx-auto flex w-full max-w-[1600px] flex-1 flex-col justify-center gap-1 px-6 md:px-10">
-              {sectionItems.map((item, i) => (
-                <motion.button
-                  key={item.id}
-                  onClick={() => goSection(item.id)}
+              {navItems.map((item, i) => (
+                <motion.div
+                  key={item.key}
                   initial={{ opacity: 0, y: 30 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.25 + i * 0.07, ease: [0.16, 1, 0.3, 1] }}
-                  className="group flex items-center gap-4 text-start font-display text-5xl leading-[1.05] text-cream/90 transition-colors hover:text-cream md:text-8xl"
-                  data-cursor
                 >
-                  <span className="accent-dot opacity-0 transition-opacity group-hover:opacity-100" />
-                  {t.nav[item.key]}
-                </motion.button>
+                  <LangLink
+                    to={item.to}
+                    onClick={() => setOpen(false)}
+                    className="group flex items-center gap-4 text-start font-display text-5xl leading-[1.05] text-cream/90 transition-colors hover:text-cream md:text-8xl"
+                    data-cursor
+                  >
+                    <span className="accent-dot opacity-0 transition-opacity group-hover:opacity-100" />
+                    {t.nav[item.key]}
+                  </LangLink>
+                </motion.div>
               ))}
-              <motion.div
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.25 + sectionItems.length * 0.07, ease: [0.16, 1, 0.3, 1] }}
-              >
-                <NavLink
-                  to={localePath(lang, '/contact')}
-                  onClick={() => setOpen(false)}
-                  className="font-display text-5xl leading-[1.05] text-cream/90 transition-colors hover:text-cream md:text-8xl"
-                  data-cursor
-                >
-                  {t.nav.contact}
-                </NavLink>
-              </motion.div>
             </nav>
 
             <div className="mx-auto flex w-full max-w-[1600px] flex-col gap-4 px-6 py-8 text-sm text-cream/70 md:flex-row md:items-center md:justify-between md:px-10">

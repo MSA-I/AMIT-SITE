@@ -1,8 +1,9 @@
 import React, { useRef, useLayoutEffect } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { SplitText } from 'gsap/SplitText';
 
-gsap.registerPlugin(ScrollTrigger);
+gsap.registerPlugin(ScrollTrigger, SplitText);
 export { gsap, ScrollTrigger };
 
 export const prefersReduced = () =>
@@ -91,6 +92,65 @@ export function RevealText({
           {i < words.length - 1 ? ' ' : ''}
         </span>
       ))}
+    </Tag>
+  );
+}
+
+/**
+ * Line-by-line masked rise reveal using GSAP SplitText.
+ * Only splits for LTR + motion-allowed; RTL or reduced-motion renders plain
+ * text untouched so Hebrew bidi never breaks. Degrades gracefully if SplitText
+ * is unavailable.
+ */
+export function RevealLines({
+  text,
+  className = '',
+  as: Tag = 'h2',
+  start = 'top 85%',
+}: {
+  text: string;
+  className?: string;
+  as?: 'h1' | 'h2' | 'h3' | 'p' | 'div';
+  start?: string;
+}) {
+  const ref = useRef<HTMLElement>(null);
+  useLayoutEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const isRtl =
+      typeof document !== 'undefined' && document.documentElement.dir === 'rtl';
+    if (isRtl || prefersReduced()) return;
+    if (typeof SplitText === 'undefined') return;
+
+    let split: ReturnType<typeof SplitText.create> | null = null;
+    const ctx = gsap.context(() => {
+      try {
+        split = SplitText.create(el, {
+          type: 'lines',
+          mask: 'lines',
+          autoSplit: true,
+          onSplit: (self) =>
+            gsap.from(self.lines, {
+              yPercent: 110,
+              stagger: 0.08,
+              duration: 1,
+              ease: EASE,
+              scrollTrigger: { trigger: el, start, once: true },
+            }),
+        });
+      } catch {
+        /* fall back to plain text on any SplitText failure */
+      }
+    }, el);
+    return () => {
+      ctx.revert();
+      split?.revert();
+    };
+  }, [text, start]);
+
+  return (
+    <Tag ref={ref as never} className={className}>
+      {text}
     </Tag>
   );
 }

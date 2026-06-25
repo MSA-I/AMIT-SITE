@@ -1,14 +1,10 @@
 import { useI18n } from '../i18n/context';
 import Seo from '../components/Seo';
 import Hero from '../components/sections/Hero';
-import Manifesto from '../components/sections/Manifesto';
-import About from '../components/sections/About';
+import AboutTeaser from '../components/sections/AboutTeaser';
 import Values from '../components/sections/Values';
-import SelectedWork from '../components/sections/SelectedWork';
-import Services from '../components/sections/Services';
-import Materials from '../components/sections/Materials';
-import Process from '../components/sections/Process';
-import Testimonials from '../components/sections/Testimonials';
+import HorizontalProjects from '../components/sections/HorizontalProjects';
+import CTASection from '../components/sections/CTASection';
 import ContactSection from '../components/sections/ContactSection';
 
 export default function Home() {
@@ -20,14 +16,10 @@ export default function Home() {
         description={t.hero.intro}
       />
       <Hero />
-      <Manifesto />
-      <About />
+      <AboutTeaser />
       <Values />
-      <SelectedWork />
-      <Services />
-      <Materials />
-      <Process />
-      <Testimonials />
+      <HorizontalProjects />
+      <CTASection />
       <ContactSection />
     </>
   );

@@ -5,6 +5,7 @@ import Seo from '../components/Seo';
 import Lightbox from '../components/Lightbox';
 import { Container, Section, Eyebrow, btnSolid, btnLine, LangLink } from '../components/ui';
 import { Reveal, RevealText, useParallax } from '../motion/anim';
+import FlipMedia from '../motion/FlipMedia';
 import { projects, getProject, title, brief } from '../data/projects';
 import { localePath } from '../lib/paths';
 
@@ -69,7 +70,7 @@ export default function Project() {
         <Container>
           <div className="grid grid-cols-2 gap-3 md:grid-cols-3">
             {project.images.map((img, i) => (
-              <Reveal as="figure" key={img.thumb} y={20} delay={(i % 3) * 0.05}>
+              <div key={img.thumb}>
                 <button
                   type="button"
                   data-cursor
@@ -77,14 +78,13 @@ export default function Project() {
                   aria-label={`${heading} - ${i + 1} / ${project.images.length}`}
                   className="group relative block w-full overflow-hidden bg-line/40"
                 >
-                  <img
+                  <FlipMedia
                     src={img.thumb}
                     alt={`${heading} - ${i + 1}`}
-                    loading="lazy"
-                    className="aspect-[4/5] w-full object-cover transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.04]"
+                    className="aspect-[4/5] w-full transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.04]"
                   />
                 </button>
-              </Reveal>
+              </div>
             ))}
           </div>
         </Container>
@@ -101,7 +101,7 @@ export default function Project() {
                   text={t.portfolio.related}
                   className="font-display leading-[0.95] text-4xl md:text-6xl"
                 />
-                <LangLink to="" className={btnLine} data-cursor>
+                <LangLink to="/portfolio" className={btnLine} data-cursor>
                   {t.portfolio.viewAll}
                 </LangLink>
               </div>
@@ -115,11 +115,10 @@ export default function Project() {
                       className="group block"
                     >
                       <div className="relative overflow-hidden bg-line/40">
-                        <img
+                        <FlipMedia
                           src={p.cover}
                           alt={title(p, lang)}
-                          loading="lazy"
-                          className="aspect-[4/5] w-full object-cover transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.04]"
+                          className="aspect-[4/5] w-full transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.04]"
                         />
                       </div>
                       <div className="mt-4 flex items-baseline justify-between gap-3">

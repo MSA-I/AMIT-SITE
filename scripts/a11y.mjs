@@ -1,7 +1,7 @@
 import { chromium } from 'playwright';
 
 const BASE = 'http://localhost:4173';
-const pages = ['/he', '/en', '/he/portfolio/modern-penthouse', '/he/contact', '/he/privacy'];
+const pages = ['/he', '/en', '/he/about', '/en/about', '/he/portfolio', '/en/portfolio', '/he/portfolio/modern-penthouse', '/he/contact', '/he/privacy'];
 const browser = await chromium.launch();
 const page = await browser.newContext({ viewport: { width: 1280, height: 900 } }).then((c) => c.newPage());
 

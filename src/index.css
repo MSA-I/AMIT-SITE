@@ -1,18 +1,18 @@
 @import 'tailwindcss';
 
 /* ============================================================
-   Amit Bar v2 - editorial-kinetic, near-monochrome
-   Cream / ink / paper + a single tiny sage accent.
+   Amit Bar v2 - monochrome graphite + brass
+   Graphite / ink / paper + a single tiny brass (sage token) accent.
    ============================================================ */
 @theme {
-  --color-cream: #f2eee6;     /* primary background */
-  --color-ink: #0e0e0e;       /* primary foreground */
-  --color-ink-soft: #4a4742;  /* muted text */
-  --color-paper: #ffffff;     /* light panels */
-  --color-line: #d9d4c8;      /* hairlines on cream */
-  --color-sage: #6e8b7b;      /* the one tiny accent (dots, ®, marks) */
+  --color-cream: #EDEDEA;     /* primary background */
+  --color-ink: #141414;       /* primary foreground */
+  --color-ink-soft: #565654;  /* muted text */
+  --color-paper: #FBFBFA;     /* light panels */
+  --color-line: #D2D2CE;      /* hairlines on cream */
+  --color-sage: #9A7B4F;      /* the one tiny accent - brass (dots, ®, marks) */
 
-  --font-serif: 'Bodoni Moda', Georgia, serif;       /* LTR display */
+  --font-serif: 'Cormorant', Georgia, serif;         /* LTR display */
   --font-sans: 'Archivo', system-ui, sans-serif;     /* LTR ui/labels */
   --font-he-serif: 'Frank Ruhl Libre', serif;        /* RTL display */
   --font-he-sans: 'Heebo', system-ui, sans-serif;    /* RTL ui/labels */
@@ -59,7 +59,7 @@
   }
   h1, h2, h3, h4 {
     font-family: var(--display);
-    font-weight: 500;
+    font-weight: 400;
     letter-spacing: -0.015em;
   }
   :root[dir='rtl'] h1,

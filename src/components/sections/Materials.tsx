@@ -26,7 +26,7 @@ function MaterialRow({
     <Reveal className="grid grid-cols-1 items-center gap-8 border-t border-cream/15 py-14 md:grid-cols-12 md:gap-14 md:py-24">
       {/* Index + material name */}
       <div className={`md:col-span-6 ${flip ? 'md:order-last' : ''}`}>
-        <span className="block font-display text-lg leading-none tabular-nums text-cream/40">
+        <span className="block font-display text-lg leading-none tabular-nums text-cream/60">
           {index}
         </span>
         <h3 className="mt-4 font-display text-6xl leading-[0.9] tracking-tight md:text-8xl">
