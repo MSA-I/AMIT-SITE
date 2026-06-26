@@ -5,6 +5,8 @@ export const en: Dict = {
   langName: 'English',
   switchTo: 'עברית',
 
+  brand: { mark: 'is timeless' },
+
   nav: {
     home: 'Home',
     portfolio: 'Portfolio',
@@ -42,6 +44,8 @@ export const en: Dict = {
       'Maximising the space down to the last metre',
       'A designed fingerprint tailored to each client',
     ],
+    dividers: ['ELEGANCE', 'FUNCTION'],
+    imageAlts: ['Living area in a private villa', 'Kitchen in a modern home', 'Bathroom in a luxury apartment'],
   },
 
   process: {
@@ -94,6 +98,7 @@ export const en: Dict = {
     filters: { all: 'All', residential: 'Residential', spaces: 'Spaces', exterior: 'Exterior' },
     viewProject: 'View project',
     viewAll: 'All projects',
+    manifesto: "Who said beauty can't be functional",
     related: 'More projects',
     photoCount: (n: number) => `${n} photos`,
   },
@@ -151,6 +156,7 @@ export const en: Dict = {
     eyebrow: 'Begin the journey',
     heading: 'Unlock your dream space',
     button: 'Start the conversation',
+    word: 'Unlock',
   },
 
   footer: {
@@ -161,6 +167,7 @@ export const en: Dict = {
     rights: 'All rights reserved',
     privacy: 'Privacy policy',
     accessibility: 'Accessibility statement',
+    closing: 'Exclusivity in its maximum expression',
   },
 
   legal: {

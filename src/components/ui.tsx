@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useRef, useLayoutEffect } from 'react';
 import { Link, type LinkProps } from 'react-router-dom';
 import { useI18n } from '../i18n/context';
 import { localePath } from '../lib/paths';
+import { gsap, prefersReduced } from '../motion/anim';
 
 export const Container: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({ className = '', ...p }) => (
   <div className={`mx-auto w-full max-w-[1600px] px-6 md:px-10 ${className}`} {...p} />
@@ -58,6 +59,7 @@ const base =
   'inline-flex items-center justify-center gap-2 text-sm font-medium tracking-wide transition-all duration-300 focus-visible:outline-2 focus-visible:outline-offset-2 whitespace-nowrap';
 
 export const btnSolid = `${base} rounded-full bg-ink px-7 py-3.5 text-cream hover:bg-sage`;
+export const btnSolidInv = `${base} rounded-full bg-cream px-7 py-3.5 text-ink hover:bg-sage hover:text-cream`;
 export const btnLine =
   'group relative inline-flex items-center gap-2 u-label text-ink transition-colors hover:text-sage';
 
@@ -90,3 +92,34 @@ export const SlideLabel: React.FC<{ children: React.ReactNode; className?: strin
     </span>
   </span>
 );
+
+/**
+ * CornerMark - recurring decorative rotated brand stamp (the reference's "is BORING(R)" mark).
+ * Static 180deg; under motion it drifts a few degrees on scroll. aria-hidden, inherits color.
+ */
+export const CornerMark: React.FC<{ word: string; className?: string }> = ({ word, className = '' }) => {
+  const ref = useRef<HTMLSpanElement>(null);
+  useLayoutEffect(() => {
+    const el = ref.current;
+    if (!el || prefersReduced()) return;
+    const ctx = gsap.context(() => {
+      gsap.fromTo(
+        el,
+        { rotation: 172 },
+        { rotation: 188, ease: 'none', scrollTrigger: { trigger: el, start: 'top bottom', end: 'bottom top', scrub: true } }
+      );
+    }, el);
+    return () => ctx.revert();
+  }, []);
+  return (
+    <span
+      ref={ref}
+      aria-hidden
+      className={`pointer-events-none select-none font-display ${className}`}
+      style={{ transform: 'rotate(180deg)' }}
+    >
+      {word}
+      <span className="align-top text-sage" style={{ fontSize: '0.45em' }}>®</span>
+    </span>
+  );
+};

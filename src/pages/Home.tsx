@@ -4,6 +4,7 @@ import Hero from '../components/sections/Hero';
 import AboutTeaser from '../components/sections/AboutTeaser';
 import Values from '../components/sections/Values';
 import HorizontalProjects from '../components/sections/HorizontalProjects';
+import ProjectsManifesto from '../components/sections/ProjectsManifesto';
 import CTASection from '../components/sections/CTASection';
 import ContactSection from '../components/sections/ContactSection';
 
@@ -19,6 +20,7 @@ export default function Home() {
       <AboutTeaser />
       <Values />
       <HorizontalProjects />
+      <ProjectsManifesto />
       <CTASection />
       <ContactSection />
     </>

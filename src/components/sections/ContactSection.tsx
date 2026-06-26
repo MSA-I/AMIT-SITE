@@ -24,7 +24,7 @@ export default function ContactSection() {
   ];
 
   return (
-    <section id="contact" data-theme="cream" className="bg-cream py-28 text-ink md:py-40">
+    <section id="contact" data-theme="paper" className="bg-paper py-28 text-ink md:py-40">
       <Container>
         <Reveal>
           <Eyebrow>{t.contact.eyebrow}</Eyebrow>
@@ -33,7 +33,7 @@ export default function ContactSection() {
         <RevealText
           text={t.contact.heading}
           as="h2"
-          className="mt-7 font-display text-6xl leading-[0.95] md:text-8xl"
+          className="t-section mt-7 leading-[0.95]"
         />
 
         <Reveal delay={0.05}>

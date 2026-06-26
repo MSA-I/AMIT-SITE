@@ -5,6 +5,8 @@ export const he = {
   langName: 'עברית',
   switchTo: 'English',
 
+  brand: { mark: 'נצחי' },
+
   nav: {
     home: 'בית',
     portfolio: 'תיק עבודות',
@@ -42,6 +44,8 @@ export const he = {
       'מיקסום החלל עד המטר האחרון',
       'טביעת אצבע מעוצבת בהתאם לרצונות ולדרישות של הלקוח',
     ],
+    dividers: ['אלגנטיות', 'פונקציונליות'],
+    imageAlts: ['סלון בווילה פרטית', 'מטבח בבית מודרני', 'אמבטיה בדירת יוקרה'],
   },
 
   process: {
@@ -94,6 +98,7 @@ export const he = {
     filters: { all: 'הכול', residential: 'מגורים', spaces: 'חללים', exterior: 'חוץ' },
     viewProject: 'צפייה בפרויקט',
     viewAll: 'לכל הפרויקטים',
+    manifesto: 'מי אמר שיופי לא יכול להיות פונקציונלי',
     related: 'פרויקטים נוספים',
     photoCount: (n: number) => `${n} תמונות`,
   },
@@ -151,6 +156,7 @@ export const he = {
     eyebrow: 'תחילת המסע',
     heading: 'בואו נעצב את חלל החלומות שלכם',
     button: 'מתחילים לדבר',
+    word: 'מתחילים',
   },
 
   footer: {
@@ -161,6 +167,7 @@ export const he = {
     rights: 'כל הזכויות שמורות',
     privacy: 'מדיניות פרטיות',
     accessibility: 'הצהרת נגישות',
+    closing: 'בלעדיות בשיא ביטויה',
   },
 
   legal: {

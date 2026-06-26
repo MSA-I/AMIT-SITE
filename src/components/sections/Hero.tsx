@@ -1,15 +1,13 @@
 import { useRef, useLayoutEffect } from 'react';
 import { useI18n } from '../../i18n/context';
-import { Container, Eyebrow, EdgeLabel, btnSolid, btnLine, LangLink } from '../ui';
-import { gsap, prefersReduced, useParallax } from '../../motion/anim';
+import { Container, EdgeLabel, CornerMark } from '../ui';
+import { Reveal, gsap, prefersReduced, useParallax } from '../../motion/anim';
 import { scrollToEl } from '../../motion/smooth';
 
-const HERO_IMG = '/projects/modern-penthouse/01.webp';
-
 export default function Hero() {
-  const { t, lang } = useI18n();
+  const { t } = useI18n();
   const headRef = useRef<HTMLHeadingElement>(null);
-  const imgRef = useParallax<HTMLImageElement>(60);
+  const emphRef = useParallax<HTMLSpanElement>(40);
 
   useLayoutEffect(() => {
     const el = headRef.current;
@@ -30,62 +28,49 @@ export default function Hero() {
 
   return (
     <section className="relative min-h-[100dvh] overflow-hidden bg-cream" data-theme="cream">
-      {/* full-bleed image */}
-      <div className="absolute inset-y-0 end-0 h-full w-full overflow-hidden md:w-[42%]">
-        <img
-          ref={imgRef}
-          src={HERO_IMG}
-          alt={`${t.hero.name} - ${t.hero.role}`}
-          className="absolute inset-0 h-[118%] w-full -translate-y-[8%] object-cover"
-          loading="eager"
-          fetchPriority="high"
-        />
-        <div className="absolute inset-0 bg-cream/30 md:hidden" />
-      </div>
-
-      <Container className="relative flex min-h-[100dvh] flex-col justify-center pt-28 pb-20">
-        <Eyebrow className="text-ink">{t.hero.role}</Eyebrow>
-
-        <h1
-          ref={headRef}
-          className="mt-7 max-w-[15ch] font-display text-[12vw] font-light leading-[0.95] tracking-[-0.01em] text-ink md:text-[8rem] lg:text-[9rem]"
-        >
-          <span className="block overflow-hidden pb-[0.06em]">
-            <span data-l className="inline-block will-change-transform">{t.hero.h1}</span>
+      <Container className="relative grid min-h-[100dvh] grid-cols-12 content-center gap-x-4 pt-28 pb-24">
+        {/* staggered oversized type field: uppercase-sans lines + one italic-serif emphasis word */}
+        <h1 ref={headRef} className="col-span-12 grid grid-cols-12 gap-x-4 text-ink">
+          <span className="col-span-11 block overflow-hidden pb-[0.06em] md:col-start-2 md:col-span-6">
+            <span data-l className="hero-sans inline-block will-change-transform">{t.hero.h1}</span>
           </span>
-          <span className="block overflow-hidden pb-[0.06em]">
-            <span data-l className="inline-block will-change-transform">{t.hero.h2}</span>
+          <span className="col-span-12 mt-1 block overflow-hidden pb-[0.06em] md:col-start-6 md:col-span-7 md:mt-2">
+            <span data-l className="hero-sans inline-block will-change-transform">{t.hero.h2}</span>
           </span>
-          <span className="block overflow-hidden pb-[0.12em]">
-            <span
-              data-l
-              className={`inline-block will-change-transform ${lang === 'en' ? 'italic' : 'font-normal'}`}
-            >
-              {t.hero.emph}
-            </span>
+          <span ref={emphRef} className="col-span-12 mt-1 block overflow-hidden pb-[0.14em] md:col-start-2 md:col-span-9 md:mt-2">
+            <span data-l className="t-hero hero-em inline-block font-display will-change-transform">{t.hero.emph}</span>
           </span>
         </h1>
 
-        <p className="mt-8 max-w-md text-lg leading-relaxed text-ink-soft">{t.hero.intro}</p>
-
-        <div className="mt-9 flex flex-wrap items-center gap-8">
-          <LangLink to="/contact" className={btnSolid} data-cursor>
-            {t.hero.ctaPrimary}
-          </LangLink>
-          <a
-            href="#work"
-            onClick={(e) => { e.preventDefault(); scrollToEl('#work'); }}
-            className={btnLine}
-            data-cursor
-          >
-            {t.hero.ctaSecondary}
-          </a>
+        {/* small fading manifesto paragraph, offset toward the end column */}
+        <div className="col-span-12 mt-10 md:col-start-7 md:col-span-4 md:mt-14">
+          <Reveal>
+            <p className="max-w-[42ch] text-[clamp(1rem,0.55vw+0.9rem,1.2rem)] leading-relaxed text-ink-soft">
+              {t.hero.intro}
+            </p>
+          </Reveal>
         </div>
-      </Container>
 
-      <EdgeLabel className="pointer-events-none absolute end-5 top-1/2 -translate-y-1/2 text-ink/80">
-        {t.hero.name}
-      </EdgeLabel>
+        {/* lone floating accent dot */}
+        <span aria-hidden className="accent-dot absolute bottom-[24%] start-[16%]" />
+
+        {/* recurring kinetic corner mark */}
+        <CornerMark word={t.brand.mark} className="absolute bottom-10 end-8 text-2xl text-ink/70 md:text-4xl" />
+
+        {/* vertical role micro-label */}
+        <EdgeLabel className="pointer-events-none absolute end-5 top-1/2 -translate-y-1/2 text-ink/60">
+          {t.hero.role}
+        </EdgeLabel>
+
+        {/* understated scroll affordance (replaces the loud pills) */}
+        <button
+          onClick={() => scrollToEl('#work')}
+          className="u-label absolute bottom-7 start-6 text-ink/70 transition-colors hover:text-sage"
+          data-cursor
+        >
+          {t.hero.scrollHint}
+        </button>
+      </Container>
     </section>
   );
 }

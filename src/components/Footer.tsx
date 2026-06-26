@@ -1,6 +1,7 @@
 import { NavLink } from 'react-router-dom';
 import { useI18n } from '../i18n/context';
-import { Container, LangLink } from './ui';
+import { Container, LangLink, CornerMark } from './ui';
+import { RevealText } from '../motion/anim';
 import {
   localePath,
   PHONE,
@@ -22,7 +23,7 @@ export default function Footer() {
   ];
 
   return (
-    <footer className="bg-ink text-cream" data-theme="ink">
+    <footer className="relative bg-ink text-cream" data-theme="ink">
       <Container className="py-20 md:py-28">
         <div className="grid grid-cols-1 gap-12 md:grid-cols-12">
           <div className="md:col-span-7">
@@ -56,6 +57,12 @@ export default function Footer() {
           </div>
         </div>
 
+        <RevealText
+          as="div"
+          text={t.footer.closing}
+          className="hero-sans mt-12 text-[clamp(1.25rem,4.5vw,3rem)] text-cream/80 text-start md:ms-[6vw]"
+        />
+
         <div className="mt-16 flex flex-col gap-4 border-t border-cream/15 pt-7 text-sm text-cream/50 md:flex-row md:items-center md:justify-between">
           <span>© 2026 Amit Bar. {t.footer.rights}.</span>
           <div className="flex items-center gap-6">
@@ -68,6 +75,11 @@ export default function Footer() {
           </div>
         </div>
       </Container>
+
+      <CornerMark
+        word={t.brand.mark}
+        className="absolute bottom-6 end-6 text-4xl text-cream/80 md:end-10 md:text-6xl"
+      />
     </footer>
   );
 }

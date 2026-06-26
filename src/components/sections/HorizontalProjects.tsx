@@ -3,8 +3,8 @@ import { ArrowUpRight } from 'lucide-react';
 import { projects, title, brief } from '../../data/projects';
 import { useI18n } from '../../i18n/context';
 import FlipMedia from '../../motion/FlipMedia';
-import { gsap, ScrollTrigger, prefersReduced, RevealText } from '../../motion/anim';
-import { Eyebrow, Container, LangLink } from '../ui';
+import { gsap, ScrollTrigger, prefersReduced } from '../../motion/anim';
+import { Eyebrow, CornerMark, LangLink } from '../ui';
 import SelectedWork from './SelectedWork';
 
 // anim.tsx already registers ScrollTrigger; the import keeps the dependency
@@ -30,7 +30,6 @@ const HORIZONTAL_QUERY =
  */
 export default function HorizontalProjects() {
   const { lang, t } = useI18n();
-  const isRtl = lang === 'he';
 
   // Default false so SSR / first paint render the static fallback and never
   // touch GSAP. matchMedia flips it on a motion-friendly desktop viewport.
@@ -69,11 +68,14 @@ export default function HorizontalProjects() {
         // invalidateOnRefresh recomputes it after resize / font load.
         const distance = () => track.scrollWidth - wrapper.clientWidth;
 
+        // x endpoints are FUNCTIONS so invalidateOnRefresh re-resolves them with
+        // the correct distance. (Constants would freeze a bad value from the
+        // RTL first-paint race, collapsing the pin to a single imageless slide.)
         const tween = gsap.fromTo(
           track,
-          { x: isRtl ? -distance() : 0 },
+          { x: 0 },
           {
-            x: isRtl ? 0 : -distance(),
+            x: () => -distance(),
             ease: 'none',
             scrollTrigger: {
               trigger: wrapper,
@@ -87,6 +89,10 @@ export default function HorizontalProjects() {
           }
         );
         setContainerTween(tween);
+        // Recompute once layout/fonts settle (the track width can land after the
+        // trigger is built, esp. in RTL), so the pin distance is never stuck at 0.
+        if (document.fonts?.ready) document.fonts.ready.then(() => ScrollTrigger.refresh());
+        requestAnimationFrame(() => ScrollTrigger.refresh());
       }, wrapper);
 
       return () => {
@@ -96,32 +102,29 @@ export default function HorizontalProjects() {
     });
 
     return () => mm.revert();
-  }, [isHorizontal, isRtl]);
+  }, [isHorizontal]);
 
   // Mobile / reduced-motion / SSR: reuse the vertical list, no GSAP.
   if (!isHorizontal || prefersReduced()) return <SelectedWork />;
 
   return (
-    <section id="work" data-theme="cream" className="bg-cream text-ink">
-      <Container className="pt-24 md:pt-36 pb-12 md:pb-16">
-        <Eyebrow>{t.portfolio.eyebrow}</Eyebrow>
-        <RevealText
-          as="h2"
-          text={t.portfolio.heading}
-          className="mt-6 font-display font-light text-6xl leading-[0.95] text-ink md:text-8xl"
-        />
-      </Container>
-
-      {/* Pinned wrapper holds the inner track. */}
+    <section id="work" data-theme="ink" className="bg-ink text-cream">
+      {/* Pinned wrapper holds the inner track; one project fills the viewport. */}
       <div ref={wrapperRef} className="relative h-screen overflow-hidden">
+        {/* small top-start section label (replaces the giant heading) */}
+        <Eyebrow className="absolute start-[6vw] top-8 z-10 text-cream">
+          {t.portfolio.eyebrow}
+        </Eyebrow>
+
         <div
           ref={trackRef}
-          // Force LTR transform coordinates; flex-row-reverse handles RTL
-          // visual order only (DOM/tab order stays 1..N).
+          // Force LTR transform coordinates in BOTH locales. A flex-row-reverse
+          // track inside an RTL document overflows to the LEFT, so scrollWidth
+          // reports only the visible width (distance 0 -> dead pin). Laying the
+          // track out LTR keeps scrollWidth correct; DOM/tab order stays 1..N
+          // and per-slide Hebrew text still renders RTL.
           style={{ direction: 'ltr' }}
-          className={`flex h-full items-center gap-[6vw] px-[6vw] will-change-transform ${
-            isRtl ? 'flex-row-reverse' : 'flex-row'
-          }`}
+          className="flex h-full flex-row items-stretch will-change-transform"
         >
           {projects.map((p, i) => (
             <LangLink
@@ -129,33 +132,43 @@ export default function HorizontalProjects() {
               to={`/portfolio/${p.slug}`}
               data-cursor
               data-cursor-label={t.portfolio.viewProject}
-              className="group block w-[80vw] shrink-0 md:w-[42vw]"
+              className="group flex h-full w-screen shrink-0 flex-col justify-center px-[6vw]"
             >
-              <FlipMedia
-                src={p.cover}
-                alt={title(p, lang)}
-                containerAnimation={containerTween ?? undefined}
-                className="aspect-[4/5] w-full bg-line/40"
-                imgClassName="transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.03]"
-              />
+              <div className="mx-auto w-full max-w-[1100px]">
+                <FlipMedia
+                  src={p.cover}
+                  alt={title(p, lang)}
+                  containerAnimation={containerTween ?? undefined}
+                  className="h-[52vh] w-full bg-cream/5 md:h-[60vh]"
+                  imgClassName="transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.03]"
+                />
 
-              <div className="mt-5 flex items-baseline justify-between gap-4">
-                <span className="u-label text-ink-soft">
-                  {String(i + 1).padStart(2, '0')}
-                </span>
-                <span className="inline-flex items-center gap-2 u-label text-ink transition-colors group-hover:text-sage">
-                  {t.portfolio.viewProject}
-                  <ArrowUpRight className="h-4 w-4" />
-                </span>
+                {/* truthful meta row: index (start) + category brief (end) */}
+                <div className="mt-6 flex items-baseline justify-between gap-4 border-t border-cream/15 pt-4 u-label text-cream/70">
+                  <span>{String(i + 1).padStart(2, '0')}</span>
+                  <span>{brief(p, lang)}</span>
+                </div>
+
+                <h3 className="t-section mt-8 text-center text-cream transition-colors group-hover:text-sage">
+                  {title(p, lang)}
+                </h3>
+
+                <div className="mt-6 flex justify-center">
+                  <span className="inline-flex items-center gap-2 u-label text-cream transition-colors group-hover:text-sage">
+                    {t.portfolio.viewProject}
+                    <ArrowUpRight className="h-4 w-4 rtl:rotate-180" aria-hidden />
+                  </span>
+                </div>
               </div>
-
-              <h3 className="mt-3 font-display font-light text-4xl leading-[0.95] text-ink transition-colors group-hover:text-sage md:text-6xl">
-                {title(p, lang)}
-              </h3>
-              <p className="mt-3 text-ink-soft">{brief(p, lang)}</p>
             </LangLink>
           ))}
         </div>
+
+        {/* recurring kinetic corner mark */}
+        <CornerMark
+          word={t.brand.mark}
+          className="absolute bottom-8 end-4 z-10 text-lg text-cream/60 md:text-xl"
+        />
       </div>
     </section>
   );

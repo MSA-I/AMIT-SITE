@@ -1,35 +1,41 @@
 import { ArrowUpRight } from 'lucide-react';
 import { useI18n } from '../../i18n/context';
-import { Container, Section, Eyebrow, LangLink, SlideLabel, btnSolid } from '../ui';
+import { Container, Section, Eyebrow, LangLink, SlideLabel, CornerMark, btnSolidInv } from '../ui';
 import { Reveal, RevealText } from '../../motion/anim';
 
 export default function CTASection() {
   const { t } = useI18n();
 
   return (
-    <Section data-theme="ink" className="bg-ink text-cream">
+    <Section data-theme="ink" className="relative overflow-hidden bg-ink text-cream">
       <Container>
-        <Reveal>
-          <Eyebrow>{t.cta.eyebrow}</Eyebrow>
+        {/* centered parenthetical micro-label, carrying the lone sage accent dot */}
+        <Reveal className="flex justify-center">
+          <Eyebrow className="text-cream/70">({t.nav.contact})</Eyebrow>
         </Reveal>
 
+        {/* the loudest type on the site: oversized serif word bleeding edge-to-edge */}
         <RevealText
-          text={t.cta.heading}
+          text={t.cta.word}
           as="h2"
-          className="mt-7 font-display font-light text-5xl leading-[0.95] md:text-7xl"
+          className="t-divider divider-word mt-6 text-center text-[clamp(4rem,30vw,28rem)] leading-[0.82]"
         />
 
-        <Reveal delay={0.05} className="mt-12">
+        {/* visible-on-dark action */}
+        <Reveal delay={0.05} className="mt-12 text-center">
           <LangLink
             to="/contact"
             data-cursor
-            className={`${btnSolid} group overflow-hidden`}
+            className={`${btnSolidInv} group overflow-hidden`}
           >
             <SlideLabel>{t.cta.button}</SlideLabel>
             <ArrowUpRight className="h-4 w-4 shrink-0" aria-hidden />
           </LangLink>
         </Reveal>
       </Container>
+
+      {/* recurring kinetic corner mark */}
+      <CornerMark word={t.brand.mark} className="absolute bottom-6 end-6 text-2xl text-cream/60 md:text-4xl" />
     </Section>
   );
 }

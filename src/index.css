@@ -114,6 +114,63 @@
     background: var(--color-sage);
     vertical-align: middle;
   }
+
+  /* ---- oversized editorial type scale (normalisboring-grade) ---- */
+  .t-hero {
+    font-family: var(--display);
+    font-size: clamp(3.25rem, 11vw, 12rem);
+    line-height: 0.9;
+    letter-spacing: -0.02em;
+  }
+  .t-section {
+    font-family: var(--display);
+    font-size: clamp(2.25rem, 6.5vw, 6rem);
+    line-height: 1;
+    letter-spacing: -0.015em;
+  }
+  .t-divider {
+    font-family: var(--display);
+    font-size: clamp(4.5rem, 19vw, 19rem);
+    line-height: 0.8;
+    letter-spacing: -0.03em;
+  }
+  .hero-sans {
+    font-family: var(--ui);
+    font-weight: 500;
+    text-transform: uppercase;
+    font-size: clamp(2.5rem, 8vw, 7.5rem);
+    line-height: 0.95;
+    letter-spacing: -0.01em;
+  }
+  /* oversized serif word that bleeds off-edge and sits behind images */
+  .divider-word {
+    font-family: var(--display);
+    line-height: 0.8;
+    white-space: nowrap;
+    user-select: none;
+    pointer-events: none;
+    color: currentColor;
+  }
+  :root[dir='rtl'] .t-hero,
+  :root[dir='rtl'] .t-section,
+  :root[dir='rtl'] .t-divider,
+  :root[dir='rtl'] .hero-sans {
+    letter-spacing: 0;
+  }
+  /* Hebrew hero strings are shorter; bump RTL scale so the hero fills the field like EN */
+  :root[dir='rtl'] .hero-sans {
+    font-size: clamp(2.75rem, 10vw, 9rem);
+  }
+  :root[dir='rtl'] .t-hero {
+    font-size: clamp(3.5rem, 13vw, 13rem);
+  }
+  /* italic-serif emphasis only in LTR; Hebrew uses weight/size contrast */
+  :root[dir='ltr'] .hero-em {
+    font-style: italic;
+  }
+  :root[dir='rtl'] .hero-em {
+    font-weight: 600;
+  }
 }
 
 @keyframes marquee {
