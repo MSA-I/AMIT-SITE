@@ -8,7 +8,9 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "preview": "vite preview",
-    "scrape": "node scripts/scrape-assets.mjs"
+    "scrape": "node scripts/scrape-assets.mjs",
+    "extract-assets": "node scripts/extract-assets.mjs",
+    "analyze-ref": "node scripts/analyze-site.mjs"
   },
   "dependencies": {
     "framer-motion": "^12.29.0",

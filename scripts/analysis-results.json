@@ -1,0 +1,190 @@
+{
+  "note": "Analysis based on AMIT-SITE codebase which faithfully replicates normalisboring.es (v2 editorial-kinetic monochrome experience)",
+
+  "cursorBlob": {
+    "exists": true,
+    "behavior": "Fixed position circular dot that follows the mouse with a soft lag (lerp 0.15). Expands from 12px to 46px when hovering interactive elements. Can display a label from data-cursor-label attribute. Native cursor stays visible for accessibility.",
+    "colorInversion": true,
+    "size": "12px at rest, 46px on hover (circular)",
+    "implementation": {
+      "method": "CSS positioned div + GSAP ticker for smooth following",
+      "css": {
+        "position": "fixed",
+        "top": 0,
+        "left": 0,
+        "zIndex": 90,
+        "pointerEvents": "none",
+        "mixBlendMode": "difference",
+        "background": "#fff",
+        "borderRadius": "9999px",
+        "willChange": "transform"
+      },
+      "js": {
+        "library": "GSAP (gsap.quickSetter + gsap.ticker)",
+        "lerp": 0.15,
+        "hoverDetection": "Checks closest() for 'a, button, [data-cursor], input, textarea, select'",
+        "labelSupport": "Reads data-cursor-label from hovered element"
+      },
+      "gracefulDegradation": {
+        "touch": "Hidden via @media (hover: none), (pointer: coarse)",
+        "reducedMotion": "Hidden via @media (prefers-reduced-motion: reduce)",
+        "nativeCursor": "Stays visible (cursor: auto) for accessibility"
+      }
+    }
+  },
+
+  "framesAnimation": {
+    "exists": false,
+    "note": "The site uses scroll-triggered reveals rather than stacked fixed-position frame layers",
+    "layerCount": 0,
+    "triggerType": "scroll",
+    "implementation": {
+      "scrollTriggers": "GSAP ScrollTrigger for individual element animations",
+      "effects": [
+        "Fade + rise reveals (Reveal component: y: 28px, opacity 0->1)",
+        "Word-by-word masked text reveals (RevealText: yPercent 115->0, staggered)",
+        "Line-by-line masked reveals (RevealLines: using GSAP SplitText)",
+        "Parallax images (useParallax: yPercent scrub on scroll)"
+      ],
+      "sectionTheming": "Sections use data-theme='cream|ink|paper' for color alternation, header adapts via IntersectionObserver"
+    }
+  },
+
+  "hoverStates": [
+    {
+      "element": "Links/buttons (general)",
+      "effect": "Color transition to sage accent",
+      "css": "transition-colors hover:text-sage"
+    },
+    {
+      "element": "Project images",
+      "effect": "Subtle scale up",
+      "css": "transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.03] or scale-[1.04]"
+    },
+    {
+      "element": "CTA links with text reveal",
+      "effect": "Text slides up to reveal duplicate copy",
+      "css": "translate-y-full -> translate-y-0 with duration-500 ease-[cubic-bezier(0.76,0,0.24,1)]"
+    },
+    {
+      "element": "Menu nav links",
+      "effect": "Opacity change + accent dot appears",
+      "css": "text-cream/90 hover:text-cream, accent-dot opacity-0 group-hover:opacity-100"
+    },
+    {
+      "element": "Solid buttons",
+      "effect": "Background color change",
+      "css": "bg-ink hover:bg-sage (pill buttons, rounded-full)"
+    },
+    {
+      "element": "Project titles",
+      "effect": "Color transition",
+      "css": "transition-colors group-hover:text-sage"
+    },
+    {
+      "element": "Footer links",
+      "effect": "Text opacity increase",
+      "css": "text-cream/80 hover:text-cream"
+    },
+    {
+      "element": "Lightbox controls",
+      "effect": "Ring/text color transition",
+      "css": "text-cream/80 ring-1 ring-cream/20 hover:text-bg"
+    }
+  ],
+
+  "otherFeatures": [
+    {
+      "name": "Smooth Scroll",
+      "description": "Lenis library for buttery smooth scroll",
+      "implementation": {
+        "library": "lenis",
+        "config": {
+          "lerp": 0.1,
+          "smoothWheel": true,
+          "touchMultiplier": 1.6
+        },
+        "integration": "Wired to GSAP ticker and ScrollTrigger.update",
+        "gracefulDegradation": "Disabled under prefers-reduced-motion"
+      }
+    },
+    {
+      "name": "Page Transitions",
+      "description": "Ink curtain wipe between routes",
+      "implementation": {
+        "library": "Framer Motion",
+        "effect": "Full-screen ink-colored div slides from bottom to top (y: 100% -> 0% -> -100%)",
+        "duration": "0.45s in, 0.5s out",
+        "easing": "[0.76, 0, 0.24, 1] (custom cubic-bezier)",
+        "content": "Shows 'AB' logo centered during transition",
+        "gracefulDegradation": "Completely skipped under prefers-reduced-motion"
+      }
+    },
+    {
+      "name": "Intro Loader",
+      "description": "One-time session intro curtain",
+      "implementation": {
+        "library": "Framer Motion",
+        "duration": "1.6 seconds total",
+        "effect": "Dark curtain with animated logo + progress line, slides up to reveal",
+        "persistence": "sessionStorage flag prevents re-showing",
+        "gracefulDegradation": "Skipped under prefers-reduced-motion"
+      }
+    },
+    {
+      "name": "Typography",
+      "description": "High-contrast serif + sans pairing, oversized editorial scale",
+      "implementation": {
+        "displayFont": "Bodoni Moda (LTR) / Frank Ruhl Libre (RTL) via font-display class",
+        "uiFont": "Archivo (LTR) / Heebo (RTL) via font-sans",
+        "heroScale": "text-[clamp(3rem,8vw,9rem)] with tight leading",
+        "labelStyle": ".u-label: text-xs uppercase tracking-[0.12em] font-medium font-sans",
+        "mixedType": "Uppercase sans + italic serif emphasis word (LTR only, Hebrew uses weight contrast)"
+      }
+    },
+    {
+      "name": "Color System",
+      "description": "Near-monochrome palette with single sage accent",
+      "implementation": {
+        "cream": "#F2EEE6 (background)",
+        "ink": "#0E0E0E (primary text)",
+        "paper": "#FFFFFF (alternate sections)",
+        "line": "#D9D4C8 (hairlines)",
+        "inkSoft": "#4A4742 (muted text)",
+        "sage": "#6E8B7B (accent - used sparingly: dot, (R) mark, hover states only)",
+        "sectionTheming": "data-theme attribute alternates cream/ink/paper backgrounds"
+      }
+    },
+    {
+      "name": "Scroll-triggered Reveals",
+      "description": "GSAP ScrollTrigger-based entrance animations",
+      "implementation": {
+        "library": "GSAP + ScrollTrigger",
+        "Reveal": "y: 28px + autoAlpha: 0 -> visible, triggered at 'top 85%'",
+        "RevealText": "Word-by-word masked rise (yPercent: 115 -> 0, stagger: 0.05)",
+        "RevealLines": "Line-by-line with SplitText (LTR only, RTL renders plain)",
+        "useParallax": "yPercent scrub animation tied to scroll position"
+      }
+    },
+    {
+      "name": "Shape Language",
+      "description": "Minimal, editorial aesthetic",
+      "implementation": {
+        "corners": "No rounded corners except pill buttons (rounded-full)",
+        "shadows": "None - hairlines over shadows",
+        "density": "Low density, big whitespace",
+        "accentDot": ".accent-dot: 8px sage circle, absolute positioned as visual punctuation"
+      }
+    },
+    {
+      "name": "Responsive/RTL Support",
+      "description": "Bilingual Hebrew RTL / English LTR",
+      "implementation": {
+        "logicalProperties": "ps/pe/ms/me/start/end/text-start/text-end (never physical pl/pr/left/right)",
+        "alternateLayouts": "md:order-* for layout changes",
+        "dirAttribute": "document.dir set by LanguageProvider",
+        "fontSwitch": "Automatic via font-display/font-sans classes"
+      }
+    }
+  ]
+}

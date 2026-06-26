@@ -2,6 +2,7 @@ import { NavLink } from 'react-router-dom';
 import { useI18n } from '../i18n/context';
 import { Container, LangLink, CornerMark } from './ui';
 import { RevealText } from '../motion/anim';
+import SpinningBadge from './SpinningBadge';
 import {
   localePath,
   PHONE,
@@ -79,6 +80,12 @@ export default function Footer() {
       <CornerMark
         word={t.brand.mark}
         className="absolute bottom-6 end-6 text-4xl text-cream/80 md:end-10 md:text-6xl"
+      />
+
+      {/* Spinning badge positioned at the opposite corner */}
+      <SpinningBadge
+        size={100}
+        className="absolute bottom-6 start-6 opacity-60 transition-opacity hover:opacity-100 md:bottom-10 md:start-10 md:block"
       />
     </footer>
   );

@@ -5,6 +5,7 @@ import { LanguageProvider, isLang, useI18n } from '../i18n/context';
 import Menu from './Menu';
 import Footer from './Footer';
 import Cursor from './Cursor';
+import CursorBlob from './CursorBlob';
 import IntroLoader from './IntroLoader';
 import PageTransition from './PageTransition';
 import { useSmoothScroll, resetScroll } from '../motion/smooth';
@@ -78,6 +79,7 @@ export default function Layout() {
     <LanguageProvider lang={lang}>
       <IntroLoader />
       <PageTransition />
+      <CursorBlob />
       <Cursor />
       <Menu />
       <main id="main">
