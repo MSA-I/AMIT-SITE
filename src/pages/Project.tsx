@@ -34,7 +34,7 @@ export default function Project() {
       {/* Full-bleed cinematic cover */}
       <section
         data-theme="ink"
-        className="relative flex min-h-[560px] w-full flex-col justify-end overflow-hidden bg-ink text-cream h-[88vh] pt-28"
+        className="relative flex min-h-[480px] w-full flex-col justify-end overflow-hidden bg-ink text-cream h-[75vh] sm:h-[80vh] md:h-[88vh] pt-24 sm:pt-28"
       >
         <div className="absolute inset-0 overflow-hidden">
           <img
@@ -55,7 +55,7 @@ export default function Project() {
           <RevealText
             as="h1"
             text={heading}
-            className="mt-6 font-display leading-[0.92] text-6xl md:text-8xl"
+            className="mt-6 font-display leading-[0.92] text-5xl sm:text-6xl md:text-8xl"
           />
           <Reveal as="div" delay={0.1} className="mt-6 flex flex-wrap items-center gap-x-3 gap-y-1 text-cream/70">
             <span className="text-base md:text-lg">{summary}</span>

@@ -12,7 +12,7 @@ export default function Manifesto() {
           as="p"
           text={t.about.journey}
           stagger={0.018}
-          className="mt-10 max-w-5xl font-display text-[7.5vw] leading-[1.18] text-ink md:text-5xl md:leading-[1.22]"
+          className="mt-10 max-w-5xl font-display text-[clamp(1.75rem,5vw+0.5rem,3rem)] leading-[1.18] text-ink sm:text-[clamp(2rem,6vw,3.5rem)] md:text-5xl md:leading-[1.22]"
         />
       </Container>
     </Section>

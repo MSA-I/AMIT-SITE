@@ -33,7 +33,7 @@ function ProjectRow({ project, index }: { project: Project; index: number }) {
           </div>
           <div className={`md:col-span-5 ${flip ? 'md:order-1' : 'md:order-2'}`}>
             <div className="u-label text-ink-soft">{String(index + 1).padStart(2, '0')}</div>
-            <h3 className="mt-3 font-display text-5xl leading-[0.95] text-ink transition-colors group-hover:text-sage md:text-7xl">
+            <h3 className="mt-3 font-display text-4xl leading-[0.95] text-ink transition-colors group-hover:text-sage sm:text-5xl md:text-7xl">
               {title(project, lang)}
             </h3>
             <p className="mt-4 text-ink-soft">{brief(project, lang)}</p>

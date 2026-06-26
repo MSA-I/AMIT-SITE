@@ -32,7 +32,7 @@ export default function Footer() {
             <LangLink
               to=""
               data-cursor
-              className="mt-4 block font-display text-[18vw] leading-[0.82] tracking-tight md:text-[11rem]"
+              className="mt-4 block font-display text-[clamp(3rem,12vw,11rem)] leading-[0.82] tracking-tight"
             >
               Amit Bar<span className="align-top text-sage" style={{ fontSize: '0.2em' }}>®</span>
             </LangLink>
@@ -79,13 +79,13 @@ export default function Footer() {
 
       <CornerMark
         word={t.brand.mark}
-        className="absolute bottom-6 end-6 text-4xl text-cream/80 md:end-10 md:text-6xl"
+        className="absolute bottom-4 end-4 text-2xl text-cream/80 sm:bottom-6 sm:end-6 sm:text-4xl md:end-10 md:text-6xl"
       />
 
       {/* Spinning badge positioned at the opposite corner */}
       <SpinningBadge
         size={100}
-        className="absolute bottom-6 start-6 opacity-60 transition-opacity hover:opacity-100 md:bottom-10 md:start-10 md:block"
+        className="absolute bottom-4 start-4 opacity-60 sm:bottom-6 sm:start-6 md:bottom-10 md:start-10"
       />
     </footer>
   );

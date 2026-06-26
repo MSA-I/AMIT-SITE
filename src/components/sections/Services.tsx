@@ -24,7 +24,7 @@ export default function Services() {
           <RevealText
             text={heading}
             as="h2"
-            className="mt-6 font-display text-6xl leading-[0.92] tracking-tight md:text-8xl"
+            className="mt-6 font-display text-5xl leading-[0.92] tracking-tight sm:text-6xl md:text-8xl"
           />
         </header>
 

@@ -18,7 +18,7 @@ export default function CTASection() {
         <RevealText
           text={t.cta.word}
           as="h2"
-          className="t-divider divider-word mt-6 text-center text-[clamp(4rem,30vw,28rem)] leading-[0.82]"
+          className="t-divider divider-word mt-6 text-center text-[clamp(3rem,18vw+1rem,28rem)] leading-[0.82]"
         />
 
         {/* visible-on-dark action */}

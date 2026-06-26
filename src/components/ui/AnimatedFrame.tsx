@@ -1,5 +1,5 @@
 import React, { useRef, useLayoutEffect, useState } from 'react';
-import { gsap, ScrollTrigger, prefersReduced } from '../../motion/anim';
+import { gsap, prefersReduced } from '../../motion/anim';
 
 interface AnimatedFrameProps {
   children: React.ReactNode;

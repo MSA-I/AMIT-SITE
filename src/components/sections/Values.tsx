@@ -19,12 +19,12 @@ export default function Values() {
       <RevealText
         as="h2"
         text={dividers[0]}
-        className="divider-word t-divider absolute end-0 top-[16vh] z-0 -me-[11vw] text-ink"
+        className="divider-word t-divider absolute end-0 top-[16vh] z-0 -me-[11vw] text-ink hidden sm:block"
       />
       <RevealText
         as="h3"
         text={dividers[1]}
-        className="divider-word t-divider absolute end-0 top-[50vh] z-0 -me-[15vw] text-ink"
+        className="divider-word t-divider absolute end-0 top-[50vh] z-0 -me-[15vw] text-ink hidden sm:block"
       />
 
       {/* Two overlapping interior photos with differing parallax depth */}
@@ -36,17 +36,17 @@ export default function Values() {
             alt={alts[0]}
             loading="lazy"
             decoding="async"
-            className="h-[58vh] w-full object-cover md:h-[64vh]"
+            className="h-[48vh] w-full object-cover sm:h-[58vh] md:h-[64vh]"
           />
         </figure>
-        <figure className="relative mt-8 w-full overflow-hidden md:order-2 md:-mt-24 md:ms-[-4vw] md:w-[52%]">
+        <figure className="relative mt-6 w-full overflow-hidden sm:mt-8 md:order-2 md:-mt-24 md:ms-[-4vw] md:w-[52%]">
           <img
             ref={img2}
             src="/projects/luxury-apartment/08.webp"
             alt={alts[2]}
             loading="lazy"
             decoding="async"
-            className="h-[52vh] w-full object-cover md:h-[58vh]"
+            className="h-[44vh] w-full object-cover sm:h-[52vh] md:h-[58vh]"
           />
         </figure>
       </div>

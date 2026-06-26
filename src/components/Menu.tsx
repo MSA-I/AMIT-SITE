@@ -91,7 +91,7 @@ export default function Menu() {
                   <LangLink
                     to={item.to}
                     onClick={() => setOpen(false)}
-                    className="group flex items-center gap-4 text-start font-display text-5xl leading-[1.05] text-cream/90 transition-colors hover:text-cream md:text-8xl"
+                    className="group flex items-center gap-4 text-start font-display text-4xl leading-[1.05] text-cream/90 transition-colors hover:text-cream sm:text-5xl md:text-8xl"
                     data-cursor
                   >
                     <span className="accent-dot opacity-0 transition-opacity group-hover:opacity-100" />

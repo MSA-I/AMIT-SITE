@@ -28,7 +28,7 @@ export default function Hero() {
 
   return (
     <section className="relative min-h-[100dvh] overflow-hidden bg-cream" data-theme="cream">
-      <Container className="relative grid min-h-[100dvh] grid-cols-12 content-center gap-x-4 pt-28 pb-24">
+      <Container className="relative grid min-h-[100dvh] grid-cols-12 content-center gap-x-4 pt-24 pb-20 sm:pt-28 sm:pb-24">
         {/* staggered oversized type field: uppercase-sans lines + one italic-serif emphasis word */}
         <h1 ref={headRef} className="col-span-12 grid grid-cols-12 gap-x-4 text-ink">
           <span className="col-span-11 block overflow-hidden pb-[0.06em] md:col-start-2 md:col-span-6">
@@ -55,10 +55,10 @@ export default function Hero() {
         <span aria-hidden className="accent-dot absolute bottom-[24%] start-[16%]" />
 
         {/* recurring kinetic corner mark */}
-        <CornerMark word={t.brand.mark} className="absolute bottom-10 end-8 text-2xl text-ink/70 md:text-4xl" />
+        <CornerMark word={t.brand.mark} className="absolute bottom-8 end-6 text-xl text-ink/70 sm:text-2xl md:text-4xl" />
 
         {/* vertical role micro-label */}
-        <EdgeLabel className="pointer-events-none absolute end-5 top-1/2 -translate-y-1/2 text-ink/60">
+        <EdgeLabel className="pointer-events-none absolute end-5 top-1/2 -translate-y-1/2 text-ink/60 hidden sm:block">
           {t.hero.role}
         </EdgeLabel>
 

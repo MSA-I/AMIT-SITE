@@ -5,13 +5,13 @@ import { localePath } from '../lib/paths';
 import { gsap, prefersReduced } from '../motion/anim';
 
 export const Container: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({ className = '', ...p }) => (
-  <div className={`mx-auto w-full max-w-[1600px] px-6 md:px-10 ${className}`} {...p} />
+  <div className={`mx-auto w-full max-w-[1600px] px-5 sm:px-6 md:px-10 ${className}`} {...p} />
 );
 
 export const Section: React.FC<React.HTMLAttributes<HTMLElement> & { id?: string }> = ({
   className = '',
   ...p
-}) => <section className={`py-24 md:py-36 ${className}`} {...p} />;
+}) => <section className={`py-20 sm:py-24 md:py-36 ${className}`} {...p} />;
 
 /** small uppercase label with the single sage accent dot */
 export const Eyebrow: React.FC<{ children: React.ReactNode; className?: string }> = ({
@@ -40,7 +40,7 @@ export const Marquee: React.FC<{ items: string[]; className?: string }> = ({ ite
     {[0, 1].map((k) => (
       <div key={k} className="flex shrink-0 animate-[marquee_28s_linear_infinite] items-center">
         {items.map((it, i) => (
-          <span key={i} className="mx-6 inline-flex items-center gap-6 font-display text-2xl md:text-4xl">
+          <span key={i} className="mx-6 inline-flex items-center gap-6 font-display text-xl sm:text-2xl md:text-4xl">
             {it}
             <span className="accent-dot" />
           </span>
