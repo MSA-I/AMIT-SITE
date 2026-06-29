@@ -1,6 +1,6 @@
 import { NavLink } from 'react-router-dom';
 import { useI18n } from '../i18n/context';
-import { Container, LangLink, CornerMark } from './ui';
+import { Container, LangLink } from './ui';
 import { RevealText } from '../motion/anim';
 import SpinningBadge from './SpinningBadge';
 import {
@@ -29,12 +29,12 @@ export default function Footer() {
         <div className="grid grid-cols-1 gap-12 md:grid-cols-12">
           <div className="md:col-span-7">
             <div className="u-label text-cream/50">{t.hero.role}</div>
-            <LangLink
-              to=""
-              data-cursor
-              className="mt-4 block font-display text-[clamp(3rem,12vw,11rem)] leading-[0.82] tracking-tight"
-            >
-              Amit Bar<span className="align-top text-sage" style={{ fontSize: '0.2em' }}>®</span>
+            <LangLink to="" data-cursor className="mt-4 block">
+              <img
+                src="/brand/ab-logo.png"
+                alt="Amit Bar Interior Design"
+                className="h-auto w-[min(72%,26rem)]"
+              />
             </LangLink>
           </div>
 
@@ -76,11 +76,6 @@ export default function Footer() {
           </div>
         </div>
       </Container>
-
-      <CornerMark
-        word={t.brand.mark}
-        className="absolute bottom-4 end-4 text-2xl text-cream/80 sm:bottom-6 sm:end-6 sm:text-4xl md:end-10 md:text-6xl"
-      />
 
       {/* Spinning badge positioned at the opposite corner */}
       <SpinningBadge

@@ -1,6 +1,7 @@
 import { ArrowUpRight } from 'lucide-react';
 import { useI18n } from '../../i18n/context';
-import { Container, Section, Eyebrow, FillButton, CornerMark } from '../ui';
+import { Container, Section, Eyebrow, FillButton } from '../ui';
+import SpinningBadge from '../SpinningBadge';
 import { Reveal, RevealText } from '../../motion/anim';
 
 export default function CTASection() {
@@ -37,8 +38,8 @@ export default function CTASection() {
         </Reveal>
       </Container>
 
-      {/* recurring kinetic corner mark */}
-      <CornerMark word={t.brand.mark} className="absolute bottom-6 end-6 text-2xl text-cream/60 md:text-4xl" />
+      {/* rotating brand badge */}
+      <SpinningBadge size={104} className="absolute bottom-6 end-6 opacity-70" />
     </Section>
   );
 }

@@ -1,5 +1,6 @@
 import { useI18n } from '../../i18n/context';
-import { Container, EdgeLabel, CornerMark } from '../ui';
+import { Container, EdgeLabel } from '../ui';
+import SpinningBadge from '../SpinningBadge';
 import { Reveal } from '../../motion/anim';
 import { scrollToEl } from '../../motion/smooth';
 
@@ -23,8 +24,8 @@ export default function Hero() {
         {/* lone floating accent dot */}
         <span aria-hidden className="accent-dot absolute bottom-[34%] start-[16%]" />
 
-        {/* recurring kinetic corner mark */}
-        <CornerMark word={t.brand.mark} className="absolute bottom-8 end-6 text-xl text-ink/70 sm:text-2xl md:text-4xl" />
+        {/* rotating brand badge (replaces the old corner stamp) */}
+        <SpinningBadge size={140} className="absolute bottom-8 end-6 opacity-80 sm:end-8" />
 
         {/* vertical role micro-label */}
         <EdgeLabel className="pointer-events-none absolute end-5 top-1/2 hidden -translate-y-1/2 text-ink-soft sm:block">

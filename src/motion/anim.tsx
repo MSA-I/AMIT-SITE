@@ -49,6 +49,54 @@ export function Reveal({
   );
 }
 
+/**
+ * Scroll word-highlight: the words fade from faint to full ink as the block
+ * scrolls through the viewport (the reference's scrubbed paragraph effect).
+ * Word-level split keeps it bidi-safe for Hebrew + English. Reduced-motion /
+ * no-JS leaves the text at full opacity (the resting CSS state).
+ */
+export function RevealHighlight({
+  text,
+  as: Tag = 'p',
+  className = '',
+}: {
+  text: string;
+  as?: 'p' | 'h2' | 'div';
+  className?: string;
+}) {
+  const ref = useRef<HTMLElement>(null);
+  const words = text.split(/\s+/).filter(Boolean);
+  useLayoutEffect(() => {
+    const el = ref.current;
+    if (!el || prefersReduced()) return;
+    const inner = el.querySelectorAll<HTMLElement>('[data-hl]');
+    const ctx = gsap.context(() => {
+      gsap.fromTo(
+        inner,
+        { opacity: 0.28 },
+        {
+          opacity: 1,
+          ease: 'power3.out',
+          stagger: 0.04,
+          scrollTrigger: { trigger: el, start: 'top 90%', end: '45% 40%', scrub: 0.5 },
+        },
+      );
+    }, el);
+    return () => ctx.revert();
+  }, [text]);
+
+  // manual word split (no SplitText) keeps the element free of an aria-label and bidi-safe
+  return (
+    <Tag ref={ref as never} className={className}>
+      {words.map((w, i) => (
+        <span data-hl key={i}>
+          {i < words.length - 1 ? w + ' ' : w}
+        </span>
+      ))}
+    </Tag>
+  );
+}
+
 /** Word-by-word masked rise reveal for big editorial headlines. */
 export function RevealText({
   text,

@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import LogoStagger from './LogoStagger';
 
 const KEY = 'ab-intro-shown';
 
@@ -43,8 +42,11 @@ export default function IntroLoader() {
             className="text-center"
             dir="ltr"
           >
-            <LogoStagger text="Amit Bar" className="font-display text-5xl tracking-tight md:text-7xl" />
-            <div className="u-label mt-4 text-cream/60">Interior Design</div>
+            <img
+              src="/brand/ab-logo.png"
+              alt="Amit Bar Interior Design"
+              className="mx-auto h-32 w-auto md:h-44"
+            />
           </motion.div>
           <motion.div
             className="mt-10 h-px bg-sage"

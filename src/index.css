@@ -183,26 +183,32 @@
   to { transform: translateX(-100%); }
 }
 
-/* Custom cursor follower (desktop, fine-pointer, motion-ok only) */
-.cursor-dot {
+/* LED trail cursor (desktop, fine-pointer, motion-ok only) */
+.cursor-trail {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  pointer-events: none;
+}
+.cursor-led {
   position: fixed;
   top: 0;
   left: 0;
-  z-index: 90;
-  pointer-events: none;
-  mix-blend-mode: difference;
-  background: #fff;
   border-radius: 9999px;
+  background: var(--color-sage);
+  box-shadow:
+    0 0 6px 1px color-mix(in srgb, var(--color-sage) 90%, transparent),
+    0 0 14px 4px color-mix(in srgb, var(--color-sage) 50%, transparent);
   will-change: transform;
 }
 
 @media (hover: none), (pointer: coarse) {
-  .cursor-dot { display: none !important; }
+  .cursor-trail { display: none !important; }
 }
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
-  .cursor-dot { display: none !important; }
+  .cursor-trail { display: none !important; }
   *, *::before, *::after {
     animation-duration: 0.001ms !important;
     animation-iteration-count: 1 !important;

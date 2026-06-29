@@ -1,6 +1,6 @@
 import { useI18n } from '../../i18n/context';
 import { Container, Eyebrow } from '../ui';
-import { RevealLines } from '../../motion/anim';
+import { RevealHighlight } from '../../motion/anim';
 import FlipMedia from '../../motion/FlipMedia';
 import { projects, title } from '../../data/projects';
 
@@ -17,9 +17,13 @@ export default function FlipShowcase() {
   return (
     <section data-theme="cream" className="relative overflow-hidden bg-cream text-ink">
       <Container className="py-24 sm:py-28 md:py-36">
-        <div className="max-w-[22ch]">
+        <div className="max-w-2xl">
           <Eyebrow>{t.portfolio.eyebrow}</Eyebrow>
-          <RevealLines as="h2" text={t.about.style} className="t-section mt-6 text-ink" />
+          <RevealHighlight
+            as="p"
+            text={t.about.style}
+            className="mt-6 font-display text-[clamp(1.75rem,4vw,3rem)] leading-[1.2] text-ink"
+          />
         </div>
 
         <div className="mt-14 grid grid-cols-12 gap-6 md:mt-20">

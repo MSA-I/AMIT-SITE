@@ -71,6 +71,42 @@
 
 ## Progress Log (newest first)
 
+### 2026-06-29 — LED trail cursor + fixed the spinning ring (wip)
+- What: (a) **Spinning ring was invisible** — `SpinningBadge`'s `<textPath>` never bound (all glyphs stacked at
+  0,0; the path was valid at length 251 but the duplicate `#spinning-badge-path` id + textPath binding failed even
+  with a unique id and `xlink:href`). Rewrote it to **place each glyph around the circle by angle** (no textPath);
+  the ring "AMIT BAR · INTERIOR DESIGN ·" now renders and spins. Hero badge bumped to 140px. (b) **Cursor** changed
+  from the single difference-blend dot to an **LED trail** — `Cursor.tsx` now drives a 16-dot chain (head tracks the
+  pointer, each dot lerps toward the one ahead) of sage/accent dots with a glow (`box-shadow` via `color-mix`), so
+  it reads as an LED comet tail; collapses to one glow when idle. Deleted `motion/useFollowCursor.ts` (superseded);
+  `index.css` `.cursor-dot` → `.cursor-trail`/`.cursor-led`.
+- Why: user said the circle wasn't showing, and wants an LED trail (Amit likes LEDs) instead of the colour-by-
+  position dot.
+- Verified: `npm run build` clean; axe = 0 on /he, /en, /he/about, /en/about, /he/portfolio (no runtime errors);
+  Playwright confirms the ring glyph group spans 91x91 (distributed, was 9x9 collapsed) and renders on cream + dark,
+  and the 16 LED dots trail the pointer and glow on dark sections.
+- Follow-ups: commit when asked. LED colour follows `--color-sage` (a brass tone in this theme), matching the site's
+  accent dots/®.
+
+### 2026-06-29 — Five reference-alignment fixes (wip)
+- What: (1) **Cursor** unfrozen — `useFollowCursor` now takes `enabled` and re-runs its effect when the dot
+  mounts (was deps `[ref]` only, so listeners never attached and `.cursor-dot` stuck at `top:0;left:0`); the
+  `mix-blend-mode:difference` already gives the position-based colour. (2) **Logo** — real `public/brand/ab-logo.png`
+  (white "AB / INTERIOR DESIGN", transparent) added to the dark `IntroLoader` (replaces the text stagger) and the
+  `Footer` brand slot; header wordmark kept. (3) **Spinning circle** — `SpinningBadge` now replaces the rotated
+  "נצחי®" `CornerMark` in `Hero`, `AboutTeaser`, `CTASection`; redundant `CornerMark` removed from `Footer`
+  (it already had the badge). (4) **Proportions** — `FlipShowcase` heading was crushed to one word per line by
+  `max-w-[22ch]` (ch resolved against the ~16px parent ≈ 176px); now a readable `max-w-2xl` paragraph. (5)
+  **Scroll word-highlight** — new `RevealHighlight` in `motion/anim.tsx` fades words `0.28->1` on scrub (reference
+  technique), applied to FlipShowcase. Uses **manual word-spans, not SplitText** (SplitText auto-adds an
+  `aria-label` -> `aria-prohibited-attr` on `<p>`).
+- Why: user request to match the reference (`Normal-is-Boring-clone`) + Amit's real site (Images #1-#3).
+- Verified: `npm run build` clean (tsc + vite); axe = **0 violations** on /he, /en, /he/about, /en/about,
+  /he/portfolio (no runtime errors); Playwright confirms the dot tracks the cursor exactly (was 0,0), the
+  highlight goes faint->solid word-by-word (ENTER `[0.71,0.57,0.39,0.28...]`, MID all `1`), 3 badges render
+  (hero 112px ink, CTA 104px cream, footer 100px cream), and the logo shows on intro + footer.
+- Follow-ups: commit when the user asks; `CornerMark` now unused in `ui.tsx` (left in place); "נצחי" string left in i18n.
+
 ### 2026-06-29 — Added PROGRESS.md + CLAUDE.md pointer (uncommitted)
 - What: created this agent log/rules file; `CLAUDE.md` now instructs agents to read it first.
 - Why: user wants one place agents read at the start of work and append progress to.

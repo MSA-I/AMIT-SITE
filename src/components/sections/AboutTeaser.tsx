@@ -1,5 +1,6 @@
 import { useI18n } from '../../i18n/context';
-import { Container, Section, LangLink, SlideLabel, Eyebrow, CornerMark } from '../ui';
+import { Container, Section, LangLink, SlideLabel, Eyebrow } from '../ui';
+import SpinningBadge from '../SpinningBadge';
 import { Reveal, RevealText, RevealLines, useParallax } from '../../motion/anim';
 
 /**
@@ -79,11 +80,8 @@ export default function AboutTeaser() {
         </div>
       </Container>
 
-      {/* recurring kinetic corner mark on this first dark beat */}
-      <CornerMark
-        word={t.brand.mark}
-        className="absolute bottom-6 end-6 text-2xl text-cream/60 md:text-4xl"
-      />
+      {/* rotating brand badge on this first dark beat */}
+      <SpinningBadge size={104} className="absolute bottom-6 end-6 opacity-70" />
     </Section>
   );
 }
