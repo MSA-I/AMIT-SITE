@@ -97,10 +97,12 @@ export function RevealText({
 }
 
 /**
- * Line-by-line masked rise reveal using GSAP SplitText.
- * Only splits for LTR + motion-allowed; RTL or reduced-motion renders plain
- * text untouched so Hebrew bidi never breaks. Degrades gracefully if SplitText
- * is unavailable.
+ * Line masked-rise reveal.
+ * LTR + motion: GSAP SplitText line-by-line stagger.
+ * RTL + motion: a single bidi-safe whole-block mask rise (SplitText line
+ *   splitting is skipped for Hebrew to avoid breaking bidi), so Hebrew still
+ *   gets the signature reveal.
+ * Reduced-motion / SplitText-unavailable: plain static text.
  */
 export function RevealLines({
   text,
@@ -116,14 +118,28 @@ export function RevealLines({
   const ref = useRef<HTMLElement>(null);
   useLayoutEffect(() => {
     const el = ref.current;
-    if (!el) return;
+    if (!el || prefersReduced()) return;
     const isRtl =
       typeof document !== 'undefined' && document.documentElement.dir === 'rtl';
-    if (isRtl || prefersReduced()) return;
-    if (typeof SplitText === 'undefined') return;
 
     let split: ReturnType<typeof SplitText.create> | null = null;
     const ctx = gsap.context(() => {
+      // RTL (or no SplitText): rise the whole block as one. The parent clips
+      // (overflow set here so the LTR path is never affected) while inner rises.
+      if (isRtl || typeof SplitText === 'undefined') {
+        const inner = el.querySelector<HTMLElement>('[data-rl-inner]');
+        if (inner) {
+          el.style.overflow = 'hidden';
+          gsap.from(inner, {
+            yPercent: 110,
+            duration: 1,
+            ease: EASE,
+            scrollTrigger: { trigger: el, start, once: true },
+          });
+        }
+        return;
+      }
+      // LTR: split into lines and stagger.
       try {
         split = SplitText.create(el, {
           type: 'lines',
@@ -150,7 +166,9 @@ export function RevealLines({
 
   return (
     <Tag ref={ref as never} className={className}>
-      {text}
+      <span data-rl-inner className="block will-change-transform">
+        {text}
+      </span>
     </Tag>
   );
 }

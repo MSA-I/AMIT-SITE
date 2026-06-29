@@ -5,11 +5,26 @@ import { gsap, ScrollTrigger, prefersReduced } from './anim';
 // dependency is explicit and the plugin is guaranteed for this scrubbed reveal.
 gsap.registerPlugin(ScrollTrigger);
 
+export type FlipVariant = 'upDown' | 'downUp' | 'leftRight' | 'rightLeft';
+
+// clip-path inset() = inset(top right bottom left); 100% on a side hides from
+// that side, so animating it to 0 sweeps the reveal across from that edge.
+const FROM: Record<FlipVariant, string> = {
+  upDown: 'inset(100% 0% 0% 0%)',   // reveal top -> down
+  downUp: 'inset(0% 0% 100% 0%)',   // reveal bottom -> up
+  leftRight: 'inset(0% 100% 0% 0%)', // reveal left -> right
+  rightLeft: 'inset(0% 0% 0% 100%)', // reveal right -> left
+};
+
 export interface FlipMediaProps {
   src: string;
   alt: string;
   className?: string;
   imgClassName?: string;
+  /** reveal direction (default upDown). leftRight/rightLeft auto-mirror in RTL. */
+  variant?: FlipVariant;
+  /** disable RTL auto-mirroring of horizontal variants */
+  rtlAware?: boolean;
   containerAnimation?: gsap.core.Tween | gsap.core.Timeline;
 }
 
@@ -24,6 +39,8 @@ export default function FlipMedia({
   alt,
   className = '',
   imgClassName = '',
+  variant = 'upDown',
+  rtlAware = true,
   containerAnimation,
 }: FlipMediaProps) {
   const figureRef = useRef<HTMLElement>(null);
@@ -33,6 +50,13 @@ export default function FlipMedia({
     const figure = figureRef.current;
     const img = imgRef.current;
     if (!figure || !img || prefersReduced()) return;
+
+    // Mirror horizontal sweeps so the reveal always reads from the leading edge.
+    let v = variant;
+    if (rtlAware && document.documentElement.dir === 'rtl') {
+      if (v === 'leftRight') v = 'rightLeft';
+      else if (v === 'rightLeft') v = 'leftRight';
+    }
 
     const ctx = gsap.context(() => {
       const trigger = {
@@ -45,7 +69,7 @@ export default function FlipMedia({
 
       gsap.fromTo(
         figure,
-        { clipPath: 'inset(100% 0% 0% 0%)' },
+        { clipPath: FROM[v] },
         { clipPath: 'inset(0% 0% 0% 0%)', ease: 'none', scrollTrigger: { ...trigger } }
       );
 
@@ -57,7 +81,7 @@ export default function FlipMedia({
     }, figure);
 
     return () => ctx.revert();
-  }, [containerAnimation]);
+  }, [containerAnimation, variant, rtlAware]);
 
   return (
     <figure ref={figureRef} className={`relative overflow-hidden ${className}`}>

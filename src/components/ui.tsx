@@ -1,4 +1,4 @@
-import React, { useRef, useLayoutEffect } from 'react';
+import React, { useRef, useLayoutEffect, useState } from 'react';
 import { Link, type LinkProps } from 'react-router-dom';
 import { useI18n } from '../i18n/context';
 import { localePath } from '../lib/paths';
@@ -121,5 +121,87 @@ export const CornerMark: React.FC<{ word: string; className?: string }> = ({ wor
       {word}
       <span className="align-top text-sage" style={{ fontSize: '0.45em' }}>®</span>
     </span>
+  );
+};
+
+/**
+ * FillButton - pill button/link whose ink fill sweeps in from the edge the
+ * pointer entered (and exits toward the edge it leaves). Pure GSAP transform on
+ * an absolute fill layer; under reduced motion the fill is omitted and a plain
+ * hover color is used. Renders a LangLink when `to` is set, else a <button>.
+ */
+export const FillButton: React.FC<{
+  children: React.ReactNode;
+  to?: string;
+  onClick?: () => void;
+  className?: string;
+  fillClass?: string;
+  hoverTextClass?: string;
+  ariaLabel?: string;
+}> = ({
+  children,
+  to,
+  onClick,
+  className = '',
+  fillClass = 'bg-ink',
+  hoverTextClass = 'text-cream',
+  ariaLabel,
+}) => {
+  const fillRef = useRef<HTMLSpanElement>(null);
+  const [filled, setFilled] = useState(false);
+
+  const edge = (e: React.PointerEvent<HTMLElement>) => {
+    const r = e.currentTarget.getBoundingClientRect();
+    const x = e.clientX - r.left;
+    const y = e.clientY - r.top;
+    const d = [x, r.width - x, y, r.height - y];
+    const m = Math.min(...d);
+    if (m === d[0]) return { x: -101, y: 0 };
+    if (m === d[1]) return { x: 101, y: 0 };
+    if (m === d[2]) return { x: 0, y: -101 };
+    return { x: 0, y: 101 };
+  };
+  const enter = (e: React.PointerEvent<HTMLElement>) => {
+    setFilled(true);
+    const f = fillRef.current;
+    if (!f || prefersReduced()) return;
+    const { x, y } = edge(e);
+    gsap.set(f, { xPercent: x, yPercent: y });
+    gsap.to(f, { xPercent: 0, yPercent: 0, duration: 0.5, ease: 'power3.out' });
+  };
+  const leave = (e: React.PointerEvent<HTMLElement>) => {
+    setFilled(false);
+    const f = fillRef.current;
+    if (!f || prefersReduced()) return;
+    const { x, y } = edge(e);
+    gsap.to(f, { xPercent: x, yPercent: y, duration: 0.5, ease: 'power3.out' });
+  };
+
+  const cls = `group relative inline-flex items-center justify-center overflow-hidden rounded-full ${className}`;
+  const inner = (
+    <>
+      <span
+        ref={fillRef}
+        aria-hidden
+        className={`absolute inset-0 ${fillClass}`}
+        style={{ transform: 'translate(0, 101%)' }}
+      />
+      <span className={`relative z-10 transition-colors duration-300 ${filled ? hoverTextClass : ''}`}>
+        {children}
+      </span>
+    </>
+  );
+
+  if (to) {
+    return (
+      <LangLink to={to} className={cls} onPointerEnter={enter} onPointerLeave={leave} onClick={onClick} data-cursor aria-label={ariaLabel}>
+        {inner}
+      </LangLink>
+    );
+  }
+  return (
+    <button type="button" className={cls} onPointerEnter={enter} onPointerLeave={leave} onClick={onClick} data-cursor aria-label={ariaLabel}>
+      {inner}
+    </button>
   );
 };

@@ -41,6 +41,7 @@ export default function IntroLoader() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
             className="text-center"
+            dir="ltr"
           >
             <LogoStagger text="Amit Bar" className="font-display text-5xl tracking-tight md:text-7xl" />
             <div className="u-label mt-4 text-cream/60">Interior Design</div>

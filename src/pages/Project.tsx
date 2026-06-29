@@ -9,6 +9,9 @@ import FlipMedia from '../motion/FlipMedia';
 import { projects, getProject, title, brief } from '../data/projects';
 import { localePath } from '../lib/paths';
 
+// Alternating clip-wipe directions give the gallery a kinetic rhythm.
+const FLIP = ['upDown', 'leftRight', 'rightLeft'] as const;
+
 export default function Project() {
   const { t, lang } = useI18n();
   const { slug } = useParams();
@@ -81,6 +84,7 @@ export default function Project() {
                   <FlipMedia
                     src={img.thumb}
                     alt={`${heading} - ${i + 1}`}
+                    variant={FLIP[i % FLIP.length]}
                     className="aspect-[4/5] w-full transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.04]"
                   />
                 </button>

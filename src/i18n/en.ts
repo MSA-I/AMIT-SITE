@@ -31,6 +31,17 @@ export const en: Dict = {
     scrollHint: 'Scroll',
   },
 
+  home: {
+    valuesEyebrow: 'Our values',
+    valuesHeading: 'What guides us',
+    values: [
+      { n: '01', title: 'Trust', desc: 'Service, professionalism and reliability throughout.' },
+      { n: '02', title: 'Space', desc: 'Maximising the space down to the last metre.' },
+      { n: '03', title: 'Bespoke', desc: 'A designed fingerprint shaped around the client.' },
+    ],
+    marquee: ['Interior design', 'Luxury apartments', 'Private homes', 'Commercial spaces', 'Home styling'],
+  },
+
   about: {
     eyebrow: 'About',
     heading: 'About Amit Bar',

@@ -2,6 +2,7 @@ import { useI18n } from '../i18n/context';
 import Seo from '../components/Seo';
 import Manifesto from '../components/sections/Manifesto';
 import About from '../components/sections/About';
+import Values from '../components/sections/Values';
 import Process from '../components/sections/Process';
 import Services from '../components/sections/Services';
 import Materials from '../components/sections/Materials';
@@ -18,6 +19,7 @@ export default function AboutPage() {
       />
       <Manifesto />
       <About />
+      <Values />
       <Process />
       <Services />
       <Materials />
