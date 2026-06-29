@@ -2,6 +2,9 @@
 
 Project constitution. Keep it short; update it when these rules change.
 
+> **Before starting any work, read [`PROGRESS.md`](./PROGRESS.md)** — the agent log + working rules and the
+> current state of the site. When you finish a unit of work, append an entry to its Progress Log.
+
 ## What this is
 Bilingual (Hebrew RTL default / English LTR) marketing + portfolio site for **Amit Bar**, a boutique
 interior-design studio. Single React SPA. **v2** is an editorial-kinetic, near-monochrome experience
