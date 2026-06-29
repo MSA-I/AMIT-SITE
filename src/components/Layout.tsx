@@ -69,7 +69,11 @@ export default function Layout() {
   // scroll-driven sections measure against the new DOM (not the old route).
   useEffect(() => {
     if (!reduce) return;
-    const id = window.requestAnimationFrame(() => ScrollTrigger.refresh());
+    const id = window.requestAnimationFrame(() => {
+      ScrollTrigger.refresh();
+      // signal the persistent header (ScrollLogo/Menu) that the new page is mounted
+      window.dispatchEvent(new Event('amit:pageready'));
+    });
     return () => window.cancelAnimationFrame(id);
   }, [pathname, reduce]);
 
@@ -97,7 +101,10 @@ export default function Layout() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -24 }}
               transition={{ duration: 0.4, ease: [0.76, 0, 0.24, 1] }}
-              onAnimationComplete={() => ScrollTrigger.refresh()}
+              onAnimationComplete={() => {
+                ScrollTrigger.refresh();
+                window.dispatchEvent(new Event('amit:pageready'));
+              }}
             >
               <Outlet />
             </motion.div>

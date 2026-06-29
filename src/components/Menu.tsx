@@ -4,7 +4,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useI18n, type Lang } from '../i18n/context';
 import { PHONE_DISPLAY, PHONE, EMAIL, INSTAGRAM, INSTAGRAM_HANDLE, waLink } from '../lib/paths';
 import { stopScroll } from '../motion/smooth';
-import { LangLink, SlideLabel } from './ui';
+import { useHeaderTheme } from '../motion/useHeaderTheme';
+import { LangLink, SlideLabel, EASE_EXPO } from './ui';
 import ScrollLogo from './ScrollLogo';
 import { projects, title, brief } from '../data/projects';
 
@@ -15,17 +16,16 @@ const navItems = [
   { key: 'contact', to: '/contact' },
 ] as const;
 
-const EASE = [0.16, 1, 0.3, 1] as const;
-
 export default function Menu() {
   const { t, lang } = useI18n();
   const nav = useNavigate();
   const loc = useLocation();
   const [open, setOpen] = useState(false);
-  const [dark, setDark] = useState(false);
+  const dark = useHeaderTheme();
 
   const featured = projects[0];
-  const list = projects.slice(0, 5);
+  // start the list after the featured project so it is not shown twice
+  const list = projects.slice(1, 6);
 
   useEffect(() => {
     stopScroll(open);
@@ -35,23 +35,6 @@ export default function Menu() {
   // close the overlay on route change (e.g. clicking a project)
   useEffect(() => {
     setOpen(false);
-  }, [loc.pathname]);
-
-  // Header button colour adapts to the theme of the section under it.
-  useEffect(() => {
-    const secs = Array.from(document.querySelectorAll('[data-theme]'));
-    if (!secs.length) {
-      setDark(false);
-      return;
-    }
-    const io = new IntersectionObserver(
-      (entries) => {
-        for (const e of entries) if (e.isIntersecting) setDark(e.target.getAttribute('data-theme') === 'ink');
-      },
-      { rootMargin: '0px 0px -100% 0px' }
-    );
-    secs.forEach((s) => io.observe(s));
-    return () => io.disconnect();
   }, [loc.pathname]);
 
   const other: Lang = lang === 'he' ? 'en' : 'he';
@@ -100,7 +83,7 @@ export default function Menu() {
                       key={item.key}
                       initial={{ opacity: 0, y: 30 }}
                       animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 0.2 + i * 0.07, ease: EASE }}
+                      transition={{ delay: 0.2 + i * 0.07, ease: EASE_EXPO }}
                     >
                       <LangLink
                         to={item.to}
@@ -118,7 +101,7 @@ export default function Menu() {
                 <motion.div
                   initial={{ opacity: 0, y: 24 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.4, ease: EASE }}
+                  transition={{ delay: 0.4, ease: EASE_EXPO }}
                 >
                   <p className="u-label mb-4 text-cream/65">{t.portfolio.eyebrow}</p>
                   <ul className="border-t border-cream/15">
@@ -149,7 +132,7 @@ export default function Menu() {
                 <motion.div
                   initial={{ opacity: 0, y: 24 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.45, ease: EASE }}
+                  transition={{ delay: 0.45, ease: EASE_EXPO }}
                   className="hidden md:block"
                 >
                   <LangLink

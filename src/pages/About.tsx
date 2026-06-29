@@ -19,8 +19,8 @@ export default function AboutPage() {
       />
       <Manifesto />
       <About />
-      <Values />
       <Process />
+      <Values />
       <Services />
       <Materials />
       <Testimonials />

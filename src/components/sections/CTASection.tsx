@@ -1,6 +1,6 @@
 import { ArrowUpRight } from 'lucide-react';
 import { useI18n } from '../../i18n/context';
-import { Container, Section, Eyebrow, LangLink, SlideLabel, CornerMark, btnSolidInv } from '../ui';
+import { Container, Section, Eyebrow, FillButton, CornerMark } from '../ui';
 import { Reveal, RevealText } from '../../motion/anim';
 
 export default function CTASection() {
@@ -21,16 +21,19 @@ export default function CTASection() {
           className="t-divider divider-word mt-6 text-center text-[clamp(3rem,18vw+1rem,28rem)] leading-[0.82]"
         />
 
-        {/* visible-on-dark action */}
-        <Reveal delay={0.05} className="mt-12 text-center">
-          <LangLink
+        {/* visible-on-dark action: direction-aware fill sweeps in from the pointer edge */}
+        <Reveal delay={0.05} className="mt-12 flex justify-center">
+          <FillButton
             to="/contact"
-            data-cursor
-            className={`${btnSolidInv} group overflow-hidden`}
+            className="border border-cream/50 px-8 py-4 text-sm font-medium tracking-wide text-cream"
+            fillClass="bg-cream"
+            hoverTextClass="text-ink"
           >
-            <SlideLabel>{t.cta.button}</SlideLabel>
-            <ArrowUpRight className="h-4 w-4 shrink-0" aria-hidden />
-          </LangLink>
+            <span className="inline-flex items-center gap-2">
+              {t.cta.button}
+              <ArrowUpRight className="h-4 w-4 shrink-0" aria-hidden />
+            </span>
+          </FillButton>
         </Reveal>
       </Container>
 

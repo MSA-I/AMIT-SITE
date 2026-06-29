@@ -98,7 +98,9 @@ export default function Values() {
         <div
           ref={followRef}
           aria-hidden
-          className="pointer-events-none fixed start-0 top-0 z-40 h-[16rem] w-[12rem] overflow-hidden"
+          // physical left-0 (not logical start-0): GSAP x is driven by raw clientX,
+          // so the anchor must be the physical left edge in both LTR and RTL.
+          className="pointer-events-none fixed left-0 top-0 z-40 h-[16rem] w-[12rem] overflow-hidden"
         >
           {media.map((p, i) => (
             <img

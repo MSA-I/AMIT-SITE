@@ -15,11 +15,11 @@ export default function FlipShowcase() {
   if (picks.length < 2) return null;
 
   return (
-    <section data-theme="ink" className="relative overflow-hidden bg-ink text-cream">
+    <section data-theme="cream" className="relative overflow-hidden bg-cream text-ink">
       <Container className="py-24 sm:py-28 md:py-36">
         <div className="max-w-[22ch]">
-          <Eyebrow className="text-cream">{t.portfolio.eyebrow}</Eyebrow>
-          <RevealLines as="h2" text={t.about.style} className="t-section mt-6 text-cream" />
+          <Eyebrow>{t.portfolio.eyebrow}</Eyebrow>
+          <RevealLines as="h2" text={t.about.style} className="t-section mt-6 text-ink" />
         </div>
 
         <div className="mt-14 grid grid-cols-12 gap-6 md:mt-20">
@@ -30,7 +30,7 @@ export default function FlipShowcase() {
               variant="leftRight"
               className="aspect-[4/3] w-full"
             />
-            <figcaption className="u-label mt-3 text-cream/80">{title(picks[0], lang)}</figcaption>
+            <figcaption className="u-label mt-3 text-ink-soft">{title(picks[0], lang)}</figcaption>
           </figure>
           <figure className="col-span-12 md:col-span-5 md:mt-24">
             <FlipMedia
@@ -39,7 +39,7 @@ export default function FlipShowcase() {
               variant="upDown"
               className="aspect-[3/4] w-full"
             />
-            <figcaption className="u-label mt-3 text-cream/80">{title(picks[1], lang)}</figcaption>
+            <figcaption className="u-label mt-3 text-ink-soft">{title(picks[1], lang)}</figcaption>
           </figure>
         </div>
       </Container>

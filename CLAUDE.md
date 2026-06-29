@@ -8,6 +8,13 @@ interior-design studio. Single React SPA. **v2** is an editorial-kinetic, near-m
 (reference level: normalisboring.es): one long cinematic scroll home + separate project & contact pages.
 Content and ~70 real project photos were migrated from the original WordPress site (`abdesigner.co.il`).
 
+## Inspiration source
+All design inspiration for this project is taken from the reference clone at
+`D:\משה פרוייקטים\פיתוח אתרים\Normal-is-Boring-clone` (a read-only 1:1 static mirror of normalisboring.es).
+Study its structure, motion, and section rhythm there and reproduce the *technique* adapted to Amit's brand
+(monochrome palette, Bodoni / Frank Ruhl, Hebrew/English RTL, Amit's real photos). Never copy its content,
+images, colours, or fonts, and never edit that folder.
+
 ## Stack
 - React 19 + TypeScript (strict) + Vite 6
 - Tailwind CSS v4 (`@tailwindcss/vite`, tokens in `src/index.css` `@theme`)
@@ -33,13 +40,13 @@ Content and ~70 real project photos were migrated from the original WordPress si
 - **Palette:** cream `#F2EEE6`, ink `#0E0E0E`, paper `#FFFFFF`, line `#D9D4C8`, muted `ink-soft #4A4742`. ONE accent **sage `#6E8B7B`** used ONLY tiny: the `.accent-dot`, the `®`, hover/active. Never large sage text/areas.
 - **Type:** display = high-contrast serif (Bodoni Moda LTR / Frank Ruhl Libre RTL, via `font-display`, auto by `dir`); ui/labels = Archivo (LTR) / Heebo (RTL) via `font-sans` + the `.u-label` class. Big headings: `font-display`, oversized (vw / text-6xl..9xl), tight leading.
 - **Mixed-type move (LTR only):** uppercase `font-sans` + an *italic* `font-display` emphasis word. Hebrew has no italic → use weight/size contrast.
-- **Color-block rhythm:** sections are self-contained and alternate light/dark via `data-theme="cream|ink|paper"` (dark = `bg-ink text-cream`). The fixed header adapts its color to the section under it (IntersectionObserver in `Menu`).
+- **Color-block rhythm:** sections are self-contained and alternate light/dark via `data-theme="cream|ink|paper"` (dark = `bg-ink text-cream`). Never place two `ink` sections adjacent. The fixed header adapts its color to the section under it (shared `useHeaderTheme` hook used by `Menu` + `ScrollLogo`).
 - **Shape:** no rounded corners except pill buttons. Hairlines over shadows. Low density, big whitespace.
 
 ## Motion rules
 - All scroll motion goes through `src/motion` helpers (which already guard `prefers-reduced-motion`). Use `Reveal` / `RevealText` for reveals, `useParallax` for images. Never add raw `window` scroll listeners.
 - Reduced-motion: Lenis/cursor/intro/transitions all disabled; content renders static and fully visible. Verify this path.
-- One marquee max (testimonials names). Custom cursor + intro loader are additive and fully degradable (off on touch/reduced-motion); native cursor stays for a11y.
+- One marquee max per page (e.g. testimonials names, or the home word strip). Custom cursor + intro loader are additive and fully degradable (off on touch/reduced-motion); native cursor stays for a11y.
 
 ## RTL / i18n
 - Logical Tailwind props only (`ps/pe/ms/me/start/end/text-start/text-end`); never `pl/pr/ml/mr/left/right`. Alternate layouts with `md:order-*`, not direction hacks.

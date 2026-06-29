@@ -1,6 +1,6 @@
 import { useRef, useLayoutEffect } from 'react';
 import { useI18n } from '../../i18n/context';
-import { Container, Eyebrow } from '../ui';
+import { Container, Eyebrow, LangLink, btnLine } from '../ui';
 import { Reveal, gsap, prefersReduced, useParallax } from '../../motion/anim';
 
 /**
@@ -54,6 +54,11 @@ export default function IntroTitles() {
             <p className="max-w-[46ch] text-[clamp(1rem,0.6vw+0.95rem,1.35rem)] leading-relaxed text-ink-soft">
               {t.hero.intro}
             </p>
+          </Reveal>
+          <Reveal delay={0.08} className="mt-6">
+            <LangLink to="/about" className={btnLine} data-cursor>
+              {t.nav.about}
+            </LangLink>
           </Reveal>
         </div>
       </Container>

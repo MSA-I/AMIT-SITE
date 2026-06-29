@@ -4,6 +4,9 @@ import { useI18n } from '../i18n/context';
 import { localePath } from '../lib/paths';
 import { gsap, prefersReduced } from '../motion/anim';
 
+/** Signature easing curve (mirrors the `--ease-out-expo` CSS token). For Framer/GSAP arrays. */
+export const EASE_EXPO = [0.16, 1, 0.3, 1] as const;
+
 export const Container: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({ className = '', ...p }) => (
   <div className={`mx-auto w-full max-w-[1600px] px-5 sm:px-6 md:px-10 ${className}`} {...p} />
 );
@@ -164,7 +167,12 @@ export const FillButton: React.FC<{
   const enter = (e: React.PointerEvent<HTMLElement>) => {
     setFilled(true);
     const f = fillRef.current;
-    if (!f || prefersReduced()) return;
+    if (!f) return;
+    // reduced motion: snap the fill in so the (re-coloured) label stays readable
+    if (prefersReduced()) {
+      gsap.set(f, { xPercent: 0, yPercent: 0 });
+      return;
+    }
     const { x, y } = edge(e);
     gsap.set(f, { xPercent: x, yPercent: y });
     gsap.to(f, { xPercent: 0, yPercent: 0, duration: 0.5, ease: 'power3.out' });
@@ -172,7 +180,11 @@ export const FillButton: React.FC<{
   const leave = (e: React.PointerEvent<HTMLElement>) => {
     setFilled(false);
     const f = fillRef.current;
-    if (!f || prefersReduced()) return;
+    if (!f) return;
+    if (prefersReduced()) {
+      gsap.set(f, { xPercent: 0, yPercent: 101 });
+      return;
+    }
     const { x, y } = edge(e);
     gsap.to(f, { xPercent: x, yPercent: y, duration: 0.5, ease: 'power3.out' });
   };
