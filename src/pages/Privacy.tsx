@@ -15,12 +15,12 @@ export default function Privacy() {
     'text-ink underline underline-offset-4 decoration-line transition-colors hover:text-sage hover:decoration-sage';
 
   const mail = (
-    <a href={`mailto:${EMAIL}`} className={linkClass} data-cursor>
+    <a href={`mailto:${EMAIL}`} className={linkClass}>
       {EMAIL}
     </a>
   );
   const tel = (
-    <a href={`tel:${PHONE}`} className={linkClass} dir="ltr" data-cursor>
+    <a href={`tel:${PHONE}`} className={linkClass} dir="ltr">
       {PHONE_DISPLAY}
     </a>
   );
@@ -121,7 +121,7 @@ export default function Privacy() {
             )}
 
             <div className="mt-14">
-              <LangLink to="" className={btnLine} data-cursor>
+              <LangLink to="" className={btnLine}>
                 {t.legal.back}
               </LangLink>
             </div>

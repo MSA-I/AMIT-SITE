@@ -48,7 +48,6 @@ export default function ContactSection() {
                 <li key={key}>
                   <a
                     href={href}
-                    data-cursor
                     {...(external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
                     className="group inline-flex items-center gap-3.5 text-xl text-ink transition-colors hover:text-sage"
                   >

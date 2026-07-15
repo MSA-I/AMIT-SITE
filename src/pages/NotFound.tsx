@@ -23,7 +23,7 @@ export default function NotFound() {
 
           <p className="max-w-md text-ink-soft">{t.notFound.text}</p>
 
-          <LangLink to="" data-cursor className={`${btnSolid} mt-2`}>
+          <LangLink to="" className={`${btnSolid} mt-2`}>
             {t.notFound.home}
           </LangLink>
         </div>

@@ -36,7 +36,10 @@ export function useSmoothScroll() {
 
 /** Jump to top + recompute triggers after a route change. */
 export function resetScroll() {
-  if (lenisInstance) lenisInstance.scrollTo(0, { immediate: true });
+  // force: Lenis silently drops scrollTo while stopped (menu open / preloader),
+  // and route changes can land in that window (e.g. clicking the frame logo
+  // over the open menu) - the reset must always win.
+  if (lenisInstance) lenisInstance.scrollTo(0, { immediate: true, force: true });
   else window.scrollTo(0, 0);
   ScrollTrigger.refresh();
 }
@@ -45,6 +48,12 @@ export function stopScroll(stop: boolean) {
   if (!lenisInstance) return;
   if (stop) lenisInstance.stop();
   else lenisInstance.start();
+}
+
+/** Smooth-scroll to an absolute page Y (used by the horizontal stage). */
+export function scrollToY(y: number) {
+  if (lenisInstance) lenisInstance.scrollTo(y, { duration: 1.2 });
+  else window.scrollTo({ top: y, behavior: 'smooth' });
 }
 
 /** Smooth-scroll to a selector or element (falls back to native). */

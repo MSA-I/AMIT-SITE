@@ -39,7 +39,7 @@ export default function ContactForm() {
           <Check className="h-6 w-6" />
         </span>
         <p className="text-lg text-ink">{f.success}</p>
-        <a href={`mailto:${EMAIL}`} className="text-sm text-sage hover:underline" data-cursor>
+        <a href={`mailto:${EMAIL}`} className="text-sm text-sage hover:underline">
           {EMAIL}
         </a>
       </div>
@@ -74,7 +74,7 @@ export default function ContactForm() {
       </div>
       {err && <p className="text-sm text-sage sm:col-span-2">{err}</p>}
       <div className="sm:col-span-2">
-        <button type="submit" className={btnSolid} data-cursor>{f.submit}</button>
+        <button type="submit" className={btnSolid}>{f.submit}</button>
       </div>
     </form>
   );

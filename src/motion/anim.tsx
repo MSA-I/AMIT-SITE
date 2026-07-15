@@ -2,15 +2,39 @@ import React, { useRef, useLayoutEffect } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { SplitText } from 'gsap/SplitText';
+import { MorphSVGPlugin } from 'gsap/MorphSVGPlugin';
+import { useStage, stageEdge, isRtl } from './stageContext';
 
-gsap.registerPlugin(ScrollTrigger, SplitText);
-export { gsap, ScrollTrigger };
+gsap.registerPlugin(ScrollTrigger, SplitText, MorphSVGPlugin);
+export { gsap, ScrollTrigger, MorphSVGPlugin };
 
 export const prefersReduced = () =>
   typeof window !== 'undefined' &&
   window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 const EASE = 'power3.out';
+
+/**
+ * pct of a vertical 'top N%' start string (fallback 85) so the same prop maps
+ * to the horizontal-stage numeric edge: 'top 85%' -> stageEdge(tw, el, 85).
+ */
+const pctOf = (start: string) => {
+  const m = /(\d+(?:\.\d+)?)%\s*$/.exec(start);
+  return m ? parseFloat(m[1]) : 85;
+};
+
+/**
+ * Stage-awareness contract shared by every reveal helper below:
+ * - Outside a <HorizontalStage> (or in its vertical fallback) behavior is the
+ *   plain vertical trigger, exactly as before.
+ * - Inside an ACTIVE horizontal stage the pin tween arrives via context state
+ *   one tick after mount; while it is still null the effect SKIPS building
+ *   (a vertical-semantics trigger built first would burn `once:true` reveals)
+ *   and rebuilds when the tween lands (it is in every deps array).
+ * - With the tween live, triggers attach containerAnimation + NUMERIC edges
+ *   via stageEdge() (string 'left/right N%' positions break under mirrored
+ *   RTL travel; see stageContext.ts).
+ */
 
 /** Fade + rise a block as it enters the viewport. */
 export function Reveal({
@@ -27,9 +51,12 @@ export function Reveal({
   as?: 'div' | 'section' | 'li' | 'span' | 'figure';
 }) {
   const ref = useRef<HTMLDivElement>(null);
+  const { inStage, horizontal, tween } = useStage();
   useLayoutEffect(() => {
     const el = ref.current;
     if (!el || prefersReduced()) return;
+    if (inStage && horizontal && !tween) return; // wait for the pin tween
+    const tw = inStage && horizontal ? tween : null;
     const ctx = gsap.context(() => {
       gsap.from(el, {
         y,
@@ -37,11 +64,18 @@ export function Reveal({
         duration: 0.9,
         delay,
         ease: EASE,
-        scrollTrigger: { trigger: el, start: 'top 85%', once: true },
+        scrollTrigger: tw
+          ? {
+              trigger: el,
+              containerAnimation: tw,
+              start: () => stageEdge(tw, el, 85),
+              once: true,
+            }
+          : { trigger: el, start: 'top 85%', once: true },
       });
     }, el);
     return () => ctx.revert();
-  }, [y, delay]);
+  }, [y, delay, inStage, horizontal, tween]);
   return (
     <Tag ref={ref as never} className={className}>
       {children}
@@ -65,10 +99,13 @@ export function RevealHighlight({
   className?: string;
 }) {
   const ref = useRef<HTMLElement>(null);
+  const { inStage, horizontal, tween } = useStage();
   const words = text.split(/\s+/).filter(Boolean);
   useLayoutEffect(() => {
     const el = ref.current;
     if (!el || prefersReduced()) return;
+    if (inStage && horizontal && !tween) return; // wait for the pin tween
+    const tw = inStage && horizontal ? tween : null;
     const inner = el.querySelectorAll<HTMLElement>('[data-hl]');
     const ctx = gsap.context(() => {
       gsap.fromTo(
@@ -78,12 +115,20 @@ export function RevealHighlight({
           opacity: 1,
           ease: 'power3.out',
           stagger: 0.04,
-          scrollTrigger: { trigger: el, start: 'top 90%', end: '45% 40%', scrub: 0.5 },
+          scrollTrigger: tw
+            ? {
+                trigger: el,
+                containerAnimation: tw,
+                start: () => stageEdge(tw, el, 90),
+                end: () => stageEdge(tw, el, 45),
+                scrub: 0.5,
+              }
+            : { trigger: el, start: 'top 90%', end: '45% 40%', scrub: 0.5 },
         },
       );
     }, el);
     return () => ctx.revert();
-  }, [text]);
+  }, [text, inStage, horizontal, tween]);
 
   // manual word split (no SplitText) keeps the element free of an aria-label and bidi-safe
   return (
@@ -112,10 +157,13 @@ export function RevealText({
   start?: string;
 }) {
   const ref = useRef<HTMLElement>(null);
+  const { inStage, horizontal, tween } = useStage();
   const words = text.split(/\s+/).filter(Boolean);
   useLayoutEffect(() => {
     const el = ref.current;
     if (!el || prefersReduced()) return;
+    if (inStage && horizontal && !tween) return; // wait for the pin tween
+    const tw = inStage && horizontal ? tween : null;
     const inner = el.querySelectorAll<HTMLElement>('[data-w]');
     const ctx = gsap.context(() => {
       gsap.set(el, { autoAlpha: 1 });
@@ -124,11 +172,18 @@ export function RevealText({
         duration: 1,
         ease: EASE,
         stagger,
-        scrollTrigger: { trigger: el, start, once: true },
+        scrollTrigger: tw
+          ? {
+              trigger: el,
+              containerAnimation: tw,
+              start: () => stageEdge(tw, el, pctOf(start)),
+              once: true,
+            }
+          : { trigger: el, start, once: true },
       });
     }, el);
     return () => ctx.revert();
-  }, [text, stagger, start]);
+  }, [text, stagger, start, inStage, horizontal, tween]);
 
   return (
     <Tag ref={ref as never} className={className}>
@@ -137,7 +192,7 @@ export function RevealText({
           <span data-w className="inline-block will-change-transform">
             {w}
           </span>
-          {i < words.length - 1 ? ' ' : ''}
+          {i < words.length - 1 ? ' ' : ''}
         </span>
       ))}
     </Tag>
@@ -164,17 +219,30 @@ export function RevealLines({
   start?: string;
 }) {
   const ref = useRef<HTMLElement>(null);
+  const { inStage, horizontal, tween } = useStage();
   useLayoutEffect(() => {
     const el = ref.current;
     if (!el || prefersReduced()) return;
-    const isRtl =
+    if (inStage && horizontal && !tween) return; // wait for the pin tween
+    const tw = inStage && horizontal ? tween : null;
+    const rtl =
       typeof document !== 'undefined' && document.documentElement.dir === 'rtl';
+    // Fresh trigger vars per tween (numeric stage edges or the vertical string).
+    const makeTrigger = (): ScrollTrigger.Vars =>
+      tw
+        ? {
+            trigger: el,
+            containerAnimation: tw,
+            start: () => stageEdge(tw, el, pctOf(start)),
+            once: true,
+          }
+        : { trigger: el, start, once: true };
 
     let split: ReturnType<typeof SplitText.create> | null = null;
     const ctx = gsap.context(() => {
       // RTL (or no SplitText): rise the whole block as one. The parent clips
       // (overflow set here so the LTR path is never affected) while inner rises.
-      if (isRtl || typeof SplitText === 'undefined') {
+      if (rtl || typeof SplitText === 'undefined') {
         const inner = el.querySelector<HTMLElement>('[data-rl-inner]');
         if (inner) {
           el.style.overflow = 'hidden';
@@ -182,7 +250,7 @@ export function RevealLines({
             yPercent: 110,
             duration: 1,
             ease: EASE,
-            scrollTrigger: { trigger: el, start, once: true },
+            scrollTrigger: makeTrigger(),
           });
         }
         return;
@@ -199,7 +267,7 @@ export function RevealLines({
               stagger: 0.08,
               duration: 1,
               ease: EASE,
-              scrollTrigger: { trigger: el, start, once: true },
+              scrollTrigger: makeTrigger(),
             }),
         });
       } catch {
@@ -210,7 +278,7 @@ export function RevealLines({
       ctx.revert();
       split?.revert();
     };
-  }, [text, start]);
+  }, [text, start, inStage, horizontal, tween]);
 
   return (
     <Tag ref={ref as never} className={className}>
@@ -221,12 +289,88 @@ export function RevealLines({
   );
 }
 
-/** Parallax an element vertically as the page scrolls. amount = px of travel. */
+/**
+ * Once-on-enter image reveal (reference data-clip): the figure unclips from
+ * the bottom edge (inset 100% -> 0, 1.2s power3.out) while the image rises
+ * into place (yPercent 35 -> 0, 1.5s). Stage-aware like the other reveals.
+ * Reduced-motion / fallback renders the image static and fully visible.
+ */
+export function ClipReveal({
+  src,
+  alt,
+  className = '',
+  imgClassName = '',
+  eager = false,
+}: {
+  src: string;
+  alt: string;
+  className?: string;
+  imgClassName?: string;
+  /** first-screen media: load eagerly at high priority instead of lazily */
+  eager?: boolean;
+}) {
+  const ref = useRef<HTMLElement>(null);
+  const imgRef = useRef<HTMLImageElement>(null);
+  const { inStage, horizontal, tween } = useStage();
+  useLayoutEffect(() => {
+    const el = ref.current;
+    const img = imgRef.current;
+    if (!el || !img || prefersReduced()) return;
+    if (inStage && horizontal && !tween) return; // wait for the pin tween
+    const tw = inStage && horizontal ? tween : null;
+    const ctx = gsap.context(() => {
+      const tl = gsap.timeline({
+        scrollTrigger: tw
+          ? {
+              trigger: el,
+              containerAnimation: tw,
+              start: () => stageEdge(tw, el, 85),
+              once: true,
+            }
+          : { trigger: el, start: 'top 85%', once: true },
+      });
+      tl.fromTo(
+        el,
+        { clipPath: 'inset(100% 0% 0% 0%)' },
+        { clipPath: 'inset(0% 0% 0% 0%)', duration: 1.2, ease: 'power3.out', immediateRender: true },
+        0,
+      ).fromTo(
+        img,
+        { yPercent: 35 },
+        { yPercent: 0, duration: 1.5, ease: 'power3.out', immediateRender: true },
+        0,
+      );
+    }, el);
+    return () => ctx.revert();
+  }, [inStage, horizontal, tween]);
+  return (
+    <figure ref={ref} className={`overflow-hidden ${className}`}>
+      <img
+        ref={imgRef}
+        src={src}
+        alt={alt}
+        loading={eager ? 'eager' : 'lazy'}
+        fetchPriority={eager ? 'high' : undefined}
+        className={`h-full w-full object-cover ${imgClassName}`}
+      />
+    </figure>
+  );
+}
+
+/**
+ * Parallax an element vertically as the page scrolls. amount = px of travel.
+ * Stage-aware: inside an active horizontal stage the vertical drift maps to
+ * the pin via numeric containerAnimation edges (a plain vertical trigger
+ * would collapse its whole scrub range into the first screen of scroll).
+ */
 export function useParallax<T extends HTMLElement>(amount = 80) {
   const ref = useRef<T>(null);
+  const { inStage, horizontal, tween } = useStage();
   useLayoutEffect(() => {
     const el = ref.current;
     if (!el || prefersReduced()) return;
+    if (inStage && horizontal && !tween) return; // wait for the pin tween
+    const tw = inStage && horizontal ? tween : null;
     const ctx = gsap.context(() => {
       gsap.fromTo(
         el,
@@ -234,11 +378,60 @@ export function useParallax<T extends HTMLElement>(amount = 80) {
         {
           yPercent: amount / 10,
           ease: 'none',
-          scrollTrigger: { trigger: el.parentElement || el, start: 'top bottom', end: 'bottom top', scrub: true },
+          scrollTrigger: tw
+            ? {
+                trigger: el,
+                containerAnimation: tw,
+                start: () => stageEdge(tw, el, 100),
+                end: () => stageEdge(tw, el, 0),
+                scrub: true,
+              }
+            : { trigger: el.parentElement || el, start: 'top bottom', end: 'bottom top', scrub: true },
         }
       );
     }, el);
     return () => ctx.revert();
-  }, [amount]);
+  }, [amount, inStage, horizontal, tween]);
+  return ref;
+}
+
+/**
+ * Horizontal drift (the stage analog of useParallax): xPercent -amount/10 ->
+ * +amount/10 scrubbed across the element's pass through the viewport. Inside
+ * an active horizontal stage it maps to the pin via numeric containerAnimation
+ * edges (enter at the 100% line -> leading edge at the 0% line); outside it
+ * uses the vertical top-bottom/bottom-top pattern. RTL negates the direction
+ * so the drift always reads with the travel.
+ */
+export function useDriftX<T extends HTMLElement>(amount = 80) {
+  const ref = useRef<T>(null);
+  const { inStage, horizontal, tween } = useStage();
+  useLayoutEffect(() => {
+    const el = ref.current;
+    if (!el || prefersReduced()) return;
+    if (inStage && horizontal && !tween) return; // wait for the pin tween
+    const tw = inStage && horizontal ? tween : null;
+    const dir = isRtl() ? -1 : 1;
+    const ctx = gsap.context(() => {
+      gsap.fromTo(
+        el,
+        { xPercent: (dir * -amount) / 10 },
+        {
+          xPercent: (dir * amount) / 10,
+          ease: 'none',
+          scrollTrigger: tw
+            ? {
+                trigger: el,
+                containerAnimation: tw,
+                start: () => stageEdge(tw, el, 100),
+                end: () => stageEdge(tw, el, 0),
+                scrub: true,
+              }
+            : { trigger: el.parentElement || el, start: 'top bottom', end: 'bottom top', scrub: true },
+        }
+      );
+    }, el);
+    return () => ctx.revert();
+  }, [amount, inStage, horizontal, tween]);
   return ref;
 }

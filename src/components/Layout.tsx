@@ -5,8 +5,8 @@ import { LanguageProvider, isLang, useI18n } from '../i18n/context';
 import Menu from './Menu';
 import Footer from './Footer';
 import Cursor from './Cursor';
-import CursorBlob from './CursorBlob';
-import IntroLoader from './IntroLoader';
+import FixedFrame from './FixedFrame';
+import Preloader from './Preloader';
 import PageTransition from './PageTransition';
 import { useSmoothScroll, resetScroll } from '../motion/smooth';
 import { ScrollTrigger } from '../motion/anim';
@@ -71,7 +71,7 @@ export default function Layout() {
     if (!reduce) return;
     const id = window.requestAnimationFrame(() => {
       ScrollTrigger.refresh();
-      // signal the persistent header (ScrollLogo/Menu) that the new page is mounted
+      // signal the persistent chrome (MenuPill theme observer) that the new page is mounted
       window.dispatchEvent(new Event('amit:pageready'));
     });
     return () => window.cancelAnimationFrame(id);
@@ -81,11 +81,15 @@ export default function Layout() {
 
   return (
     <LanguageProvider lang={lang}>
-      <IntroLoader />
+      {/* Fixed chrome. IRON RULE: <FixedFrame/> and <Cursor/> mount here as
+          direct siblings of <main>, OUTSIDE the Framer AnimatePresence tree -
+          no ancestor may carry transform / filter / opacity<1 / will-change
+          (that would break position:fixed + mix-blend-difference). */}
+      <Preloader />
       <PageTransition />
-      <CursorBlob />
       <Cursor />
       <Menu />
+      <FixedFrame />
       <main id="main">
         <RouteH1 />
         {reduce ? (

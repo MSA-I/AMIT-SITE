@@ -44,12 +44,14 @@
 
 ---
 
-## Current state (snapshot)
-- **Stack:** React 19 + TS (strict) + Vite 6 + Tailwind v4 + GSAP/ScrollTrigger + Lenis + Framer Motion + React Router v7. No backend.
-- **Home flow:** Hero (logo stage) → IntroTitles → FlipShowcase → Values (interactive cursor image-swap) → one marquee → HorizontalProjects → ProjectsManifesto → CTASection → ContactSection.
-- **Signature moves:** logo shrinks into the header on scroll (`ScrollLogo`), interactive 3-values, rich full-screen menu (featured project + project list), flip-reveal variety, direction-aware `FillButton`.
-- **Inner pages:** About (Manifesto → About → Process → Values → Services → Materials → Testimonials → CTA) and Project detail (cover + flip-variety gallery + Lightbox + related).
-- **Latest commits:** `965d2fe` (port), `714f204` (code-review fixes). Branch `main`, working tree clean.
+## Current state (snapshot) - v3 horizontal journey (2026-07-14)
+- **Stack:** React 19 + TS (strict) + Vite 6 + Tailwind v4 + GSAP/ScrollTrigger/SplitText/MorphSVG + Lenis + Framer Motion (overlay leaves only) + React Router v7. No backend. Dev server port **3000**.
+- **Home = pinned horizontal journey** (`src/motion/HorizontalStage.tsx` + `src/components/sections/panels/`): 8 chapters (PanelHero 85vw cream → PanelImages 72 paper → PanelStatement 80 cream → PanelDark 120 ink → PanelStrip 15 cream → PanelImagesB 72 paper → PanelValues 95 cream → PanelProjects intro+accordion 342vw+manifesto paper) then vertical tail (CTASection ink → ContactSection paper). RTL travel is MIRRORED (track `direction:ltr` + `w-max` + `flex-row-reverse`, tween `-d → 0`); in-stage triggers use **numeric edges** via `stageEdge()` (string 'left N%' positions break under mirrored travel - see stageContext.ts). Mobile <1024 / reduced-motion: same panels stacked vertically.
+- **Chrome:** `Preloader` (letters-slide + real image progress + geometric handoff, once per session, `?instant` skips) → `FixedFrame` (mix-blend-difference corners AMIT / interior design + flipped BAR®; z-map 100/80/60/40/36/30; NO transformed ancestors allowed) · `MenuPill` (hidden on home hero until 0.8vh, always visible on inner pages) + `MenuOverlay` (Framer width-wipe, focus trap) · `Cursor` (single difference dot, grows with label over `[data-cursor="explore"]`) · `Footer` (cream; giant `BarWordmark` BAR® SVG stretching via MorphSVG scrub, static END state under reduced-motion; featured card overlap; real `/brand/ab-logo-ink.png` lockup).
+- **Real logo:** `public/brand/ab-logo.png` (white) + generated `ab-logo-ink.png`; favicons from the AB monogram (`scripts/favicon.mjs`).
+- **Inner pages KEPT as-is by user decision** (ProjectsIndex rows, About, Project detail) - only chrome-compat touches applied (explore cursor targets, top clearance).
+- **Verification scripts:** `scripts/home-check.mjs` (journey engine, both langs + reduced + mobile), `scripts/smoke-chrome.mjs` (preloader landing/pill/menu/cursor), `scripts/verify-footer.mjs` (morph), `scripts/a11y.mjs` (axe on :4173 preview; `.frame` excluded - documented mix-blend-difference false positive).
+- Working tree: uncommitted v3 redesign (commit when the user asks).
 
 ---
 
@@ -70,6 +72,72 @@
 ---
 
 ## Progress Log (newest first)
+
+### 2026-07-15c — preloader lockup collision fix (wip)
+- What: user screenshot - "interior design" ran under AMIT's glyphs in the opening lockup.
+  fit-content collapsed .pl-logo to AMIT's width; replaced with the reference's explicit rest box
+  (5.6em x 2em): AMIT top-inner corner, group bottom-opposite corner - diagonal interleave, zero
+  glyph collision. .pl-amit top -0.56em -> 0.1em (near-touch stack, entrance still tweens top->0).
+- Verified: lockup screenshots clean in he+en; smoke-chrome landing 0.00-0.03px (last-visible dTop
+  improved 3.00 -> 0.00); replay + zero console errors.
+
+### 2026-07-15b — footer morph decomposition fix (wip)
+- What: user screenshot showed the mid-morph B breaking apart (floating bars, seams, stray dot).
+  Root cause: the "lower-bowl loop" morph pieces (B_i_lowright + B_i_bottom) read as disconnected
+  floating rectangles mid-flight - a didone bowl cannot stretch. Removed both pairs (only the
+  STRAIGHT members morph now: B/R stems + R leg, exactly the reference's move), anchored the bowls'
+  outer subpaths 12u INSIDE the stems (seam-killing overlap) and reordered stems to paint UNDER the
+  bowls. WORDMARK_MORPHS is now 3 pairs; Footer iterates the array so no Footer change needed.
+- Verified: rest / mid / end screenshots eyeballed clean (bowls float, serifed stems descend, no
+  floating bars/seams/dot); verify-footer 26/26; tsc + build clean.
+
+### 2026-07-15 — intro drama, didone footer letters, scroll-flicker fix (wip)
+- What: (1) **Preloader now runs on EVERY full load** (user: the letters moment must always play);
+  `markIntroDone` no longer stamps the session key - it is an automation-only skip switch
+  (Playwright scripts + `?instant`). (2) **Hero texts gated on `introDone()`** (they used to reveal
+  and finish UNDER the curtain) + one `ScrollTrigger.refresh()` after the post-intro mount
+  (late-created containerAnimation triggers are never evaluated otherwise - they sat frozen at
+  yPercent 115, verified). (3) **Preloader scale drama**: the cascade phase plays ~2x
+  (`clamp(3rem, 9vw, 8.5rem)`), then the entrance tweens font-size down to the LIVE `.frame-logo`
+  size while the box expands - full-screen word travel like the reference, landing still 0.03px.
+  Resolve wait 1300->900ms; `.pl-num` bumped to reference presence. Verified frame-by-frame vs the
+  served reference clone (`scripts/intro-check.mjs` kept as a permanent gate). (4) **Scroll flicker
+  fix** (user-reported shimmer on the dark chapter's flip edge): stage track now travels in WHOLE
+  pixels (`snap:{x:1}` - 0/70 fractional samples during live scrub) and the two-layer FlipMedia
+  top wipe overshoots to 101% so no sub-pixel sliver lingers. (5) **BarWordmark redrawn as a
+  high-contrast DIDONE** matching the real AB logo (same 5 morph pairs/ids; bowls static, stems +
+  leg stretch); footer reduced-motion still snaps to the END state; `verify-footer.mjs` updated
+  (hero-em selector, end-state assertion) - 26/26. `a11y.mjs` now sets the skip flag.
+- Why: user feedback - the opening letters animation was missing (old session flag) and too subtle
+  vs the reference; footer letters had to match the logo's typeface; flicker while scrolling.
+- Verified: tsc + build clean; intro-check PASS (replay on reload, chars animate, hero words rise
+  after curtain, skip override works); smoke-chrome PASS both langs (landing 0.03px with the
+  shrink); home-check PASS; verify-footer 26/26; flicker checks 0/70 fractional + top cleared.
+- Follow-ups: commit when asked.
+
+### 2026-07-14 — v3: full horizontal-journey redesign after normal-studio-clone (wip)
+- What: complete home redesign as a pinned horizontal journey + new chrome, built via 4 multi-agent
+  workflows (ultracode) with adversarial verify at each phase. New: `src/motion/stageContext.ts`
+  (`stageEdge` NUMERIC containerAnimation edges - GSAP's string positions break under mirrored RTL
+  travel, `_caScrollDist` goes negative), `HorizontalStage`/`HPanel` engine (RTL mirrored, `w-max`
+  track fix), 8 home panels incl. the 15→57vw projects accordion, `Preloader` (chars slide x120%→0 +
+  real progress + width/height-expand handoff landing 0.03px on the frame), `FixedFrame`
+  (difference corners), `MenuPill`+`MenuOverlay` split, single explore `Cursor`, cream `Footer` with
+  hand-drawn `BarWordmark` BAR® MorphSVG stretch (5 pairs, `_f` = y-edited copies), real AB logo
+  everywhere + favicons. Inner pages kept per user decision (compat touches only). Deleted:
+  ScrollLogo, CursorBlob, IntroLoader, Hero, IntroTitles, FlipShowcase, HorizontalProjects,
+  ProjectsManifesto, AboutTeaser. ~30 review findings + visual-QA issues fixed across the phases.
+- Why: user request - recreate the normal-studio-clone experience (design/animations/UX) as Amit's
+  own version; decisions locked via AskUserQuestion (full horizontal home, strict monochrome, full
+  scope, adopt reference chrome incl. preloader letters + footer stretch); ultracode per user.
+- Verified: `tsc -b` + `npm run build` clean; `home-check.mjs` PASS (he RTL mirrored x -13k→0
+  monotonic, en, reduced, 390px mobile); `smoke-chrome.mjs` PASS both langs; **axe = 0 on 9 routes
+  both langs** (`.frame` excluded - documented blend false positive); reduced-motion static+visible
+  incl. footer END-state snap; side-by-side screenshots vs the served reference clone eyeballed
+  (hero / dark chapter / footer stretch).
+- Follow-ups: commit when asked; chunk >500kB warning (consider code-split later); transient
+  difference-blend text crossings are inherent to the fixed chrome (accepted); ProjectsIndex image
+  pairs became real links (explore cursor honesty) - flag to user, revert on request.
 
 ### 2026-06-29 — LED trail cursor + fixed the spinning ring (wip)
 - What: (a) **Spinning ring was invisible** — `SpinningBadge`'s `<textPath>` never bound (all glyphs stacked at

@@ -7,6 +7,12 @@ export const he = {
 
   brand: { mark: 'נצחי' },
 
+  preloader: { loading: 'טוען' },
+
+  cursor: { explore: 'לגלות' },
+
+  frame: { homeAria: 'עמית בר, לעמוד הבית' },
+
   nav: {
     home: 'בית',
     portfolio: 'תיק עבודות',
@@ -40,6 +46,35 @@ export const he = {
       { n: '03', title: 'התאמה', desc: 'טביעת אצבע מעוצבת לפי הרצונות והצרכים של הלקוח.' },
     ],
     marquee: ['עיצוב פנים', 'דירות יוקרה', 'בתים פרטיים', 'חללים מסחריים', 'הום סטיילינג'],
+  },
+
+  // v2 one-long-scroll home: copy for the stage panels (hero handled by `hero`).
+  // manifesto title intentionally reuses portfolio.manifesto - no key here.
+  homeStage: {
+    imagesLabel: 'מתוך הפרויקטים',
+    statementEyebrow: 'הסטודיו',
+    statementTitle: 'כל חלל מתחיל בדיאלוג',
+    statementBody:
+      'סגנון מודרני ואלגנטי - אלמנטים נקיים, פונקציונליות וחיבור עדין בין חומרים. כך נולד חלל שמדבר בשפה של מי שגר בו.',
+    darkStatementLead: 'עיצוב טוב מתחיל בהקשבה',
+    darkStatement:
+      'אנחנו מזהים את הרצון והצורך של כל לקוח, ממקסמים את החלל עד המטר האחרון, ומחברים בין חומרים גולמיים לכדי בית מודרני, אלגנטי ומדויק.',
+    stripWord: 'ערכים',
+    valuesEyebrow: 'הערכים שלנו',
+    projectsEyebrow: 'עבודות נבחרות',
+    projectsIntro:
+      'כל פרויקט מספר סיפור של בית אחר - דירת יוקרה, בית פרטי או חלל מסחרי. אנחנו מלווים כל לקוח מהרעיון הראשון ועד קבלת המפתח, ומעצבים את החלל סביב האופי, הרצונות והצרכים שלו. הנה מבחר מהעבודות האחרונות שלנו.',
+    manifestoBody:
+      'אם גם אתם מאמינים שיופי ופרקטיות הולכים יחד, נשמח להתחיל איתכם את המסע. בואו נדבר על החלל הבא שלכם.',
+    panelAria: {
+      hero: 'פתיחה',
+      images: 'תמונות מהפרויקטים',
+      imagesB: 'עוד מהפרויקטים',
+      statement: 'הצהרת הסטודיו',
+      dark: 'הגישה שלנו',
+      values: 'הערכים שלנו',
+      projects: 'פרויקטים נבחרים',
+    },
   },
 
   about: {
@@ -171,6 +206,7 @@ export const he = {
   },
 
   footer: {
+    featuredLabel: 'פרויקט נבחר',
     tagline: 'עיצוב פנים - דירות יוקרה, בתים פרטיים וחללים מסחריים.',
     nav: 'ניווט',
     contactHeading: 'יצירת קשר',

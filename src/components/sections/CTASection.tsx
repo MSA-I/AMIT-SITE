@@ -22,8 +22,10 @@ export default function CTASection() {
           className="t-divider divider-word mt-6 text-center text-[clamp(3rem,18vw+1rem,28rem)] leading-[0.82]"
         />
 
-        {/* visible-on-dark action: direction-aware fill sweeps in from the pointer edge */}
-        <Reveal delay={0.05} className="mt-12 flex justify-center">
+        {/* visible-on-dark action: direction-aware fill sweeps in from the pointer edge.
+            The spinning badge sits inboard BESIDE the button - both bottom
+            corners belong to the fixed frame mark (RTL/LTR mirror). */}
+        <Reveal delay={0.05} className="mt-12 flex items-center justify-center gap-8">
           <FillButton
             to="/contact"
             className="border border-cream/50 px-8 py-4 text-sm font-medium tracking-wide text-cream"
@@ -35,11 +37,9 @@ export default function CTASection() {
               <ArrowUpRight className="h-4 w-4 shrink-0" aria-hidden />
             </span>
           </FillButton>
+          <SpinningBadge size={88} className="opacity-70" />
         </Reveal>
       </Container>
-
-      {/* rotating brand badge */}
-      <SpinningBadge size={104} className="absolute bottom-6 end-6 opacity-70" />
     </Section>
   );
 }

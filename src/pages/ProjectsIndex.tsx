@@ -34,8 +34,9 @@ export default function ProjectsIndex() {
         </Container>
       </Section>
 
-      {/* Rows */}
-      <Section data-theme="paper" className="bg-paper text-ink !pt-0">
+      {/* Rows. The small top padding pushes row 01's meta below the first
+          paint so it never sits under the FixedFrame's bottom corner mark. */}
+      <Section data-theme="paper" className="bg-paper text-ink !pt-10 md:!pt-16">
         <Container>
           <div className="flex flex-col gap-24 md:gap-36">
             {projects.map((project, i) => {
@@ -54,7 +55,10 @@ export default function ProjectsIndex() {
                   className="grid items-center gap-8 md:grid-cols-12 md:gap-10"
                 >
                   {/* Image pair */}
-                  <div
+                  <LangLink
+                    to={`/portfolio/${project.slug}`}
+                    data-cursor="explore"
+                    aria-label={`${t.portfolio.viewProject} - ${heading}`}
                     className={`grid grid-cols-1 gap-4 sm:grid-cols-2 md:col-span-8 ${
                       textFirst ? 'md:order-2' : 'md:order-1'
                     }`}
@@ -69,7 +73,7 @@ export default function ProjectsIndex() {
                       alt={`${heading} - 2`}
                       className="aspect-[4/5] w-full bg-line/40"
                     />
-                  </div>
+                  </LangLink>
 
                   {/* Text block */}
                   <div
@@ -86,7 +90,6 @@ export default function ProjectsIndex() {
                       <p className="mt-4 text-base text-ink-soft md:text-lg">{summary}</p>
                       <LangLink
                         to={`/portfolio/${project.slug}`}
-                        data-cursor
                         aria-label={`${t.portfolio.viewProject} - ${heading}`}
                         className={`${btnLine} mt-8 overflow-hidden`}
                       >

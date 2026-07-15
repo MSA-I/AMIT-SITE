@@ -68,7 +68,6 @@ export default function Values() {
             <li key={v.n} className="border-b border-cream/15">
               <div
                 className="group flex flex-col gap-3 py-8 md:flex-row md:items-baseline md:gap-8 md:py-12"
-                data-cursor
                 onMouseEnter={() => setActive(i)}
                 onMouseLeave={() => setActive((cur) => (cur === i ? null : cur))}
               >

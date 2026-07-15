@@ -76,7 +76,7 @@ export default function Project() {
               <div key={img.thumb}>
                 <button
                   type="button"
-                  data-cursor
+                  data-cursor="explore"
                   onClick={() => setLb(i)}
                   aria-label={`${heading} - ${i + 1} / ${project.images.length}`}
                   className="group relative block w-full overflow-hidden bg-line/40"
@@ -105,7 +105,7 @@ export default function Project() {
                   text={t.portfolio.related}
                   className="font-display leading-[0.95] text-4xl md:text-6xl"
                 />
-                <LangLink to="/portfolio" className={btnLine} data-cursor>
+                <LangLink to="/portfolio" className={btnLine}>
                   {t.portfolio.viewAll}
                 </LangLink>
               </div>
@@ -115,7 +115,7 @@ export default function Project() {
                   <Reveal as="div" key={p.slug} delay={i * 0.06}>
                     <LangLink
                       to={`/portfolio/${p.slug}`}
-                      data-cursor
+                      data-cursor="explore"
                       className="group block"
                     >
                       <div className="relative overflow-hidden bg-line/40">
@@ -140,7 +140,7 @@ export default function Project() {
           )}
 
           <Reveal as="div" className="mt-16 flex justify-center md:mt-24">
-            <LangLink to="/contact" className={btnSolid} data-cursor>
+            <LangLink to="/contact" className={btnSolid}>
               {t.nav.contact}
             </LangLink>
           </Reveal>

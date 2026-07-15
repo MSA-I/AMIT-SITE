@@ -1,12 +1,15 @@
 import { useEffect, useState } from 'react';
 
 /**
- * Tracks whether the section currently under the fixed header is dark
- * (`data-theme="ink"`), so header elements (brand logo, menu button) can flip
- * colour. The header is persistent (it outlives page transitions), so the
- * observer re-binds on the `amit:pageready` window event that Layout fires once
- * a freshly navigated page has mounted — otherwise it would keep observing the
- * outgoing route's sections after client-side navigation.
+ * Tracks whether the section under the TOP BAND of the viewport (top 8% -
+ * where the fixed MenuPill, its only consumer, actually sits) is dark
+ * (`data-theme="ink"`), so the pill can flip colour. Sampling the pill's own
+ * band (not the viewport centre) keeps its colour matched to its real
+ * backdrop across light<->dark section boundaries. The pill is persistent
+ * (it outlives page transitions), so the observer re-binds on the
+ * `amit:pageready` window event that Layout fires once a freshly navigated
+ * page has mounted - otherwise it would keep observing the outgoing route's
+ * sections after client-side navigation.
  */
 export function useHeaderTheme(): boolean {
   const [dark, setDark] = useState(false);
@@ -24,7 +27,7 @@ export function useHeaderTheme(): boolean {
         (entries) => {
           for (const e of entries) if (e.isIntersecting) setDark(e.target.getAttribute('data-theme') === 'ink');
         },
-        { rootMargin: '0px 0px -100% 0px' }
+        { rootMargin: '0px 0px -92% 0px' }
       );
       secs.forEach((s) => io!.observe(s));
     };

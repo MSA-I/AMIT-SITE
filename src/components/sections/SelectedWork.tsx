@@ -13,7 +13,7 @@ function ProjectRow({ project, index }: { project: Project; index: number }) {
   return (
     <LangLink
       to={`/portfolio/${project.slug}`}
-      data-cursor
+      data-cursor="explore"
       className="group block border-t border-line py-8 md:py-12"
     >
       <Container>

@@ -103,7 +103,7 @@ export default function Accessibility() {
             )}
 
             <div className="mt-12">
-              <LangLink to="" className={btnLine} data-cursor>
+              <LangLink to="" className={btnLine}>
                 {t.legal.back}
               </LangLink>
             </div>

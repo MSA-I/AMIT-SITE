@@ -25,6 +25,9 @@
   :root {
     --safe-top: env(safe-area-inset-top, 0px);
     --safe-bottom: env(safe-area-inset-bottom, 0px);
+    /* shared chrome geometry: frame padding + wordmark size (Preloader, FixedFrame) */
+    --frame-pad: clamp(1.25rem, 2.5vw, 2.5rem);
+    --frame-logo-size: clamp(1.75rem, 4.5vw, 3.75rem);
   }
 
   html {
@@ -147,6 +150,13 @@
     line-height: 0.95;
     letter-spacing: -0.01em;
   }
+  /* oversized serif value word (home stage values panel) */
+  .t-value {
+    font-family: var(--display);
+    font-size: clamp(3rem, 7vw + 1rem, 9.5rem);
+    line-height: 0.95;
+    letter-spacing: -0.02em;
+  }
   /* oversized serif word that bleeds off-edge and sits behind images */
   .divider-word {
     font-family: var(--display);
@@ -159,7 +169,8 @@
   :root[dir='rtl'] .t-hero,
   :root[dir='rtl'] .t-section,
   :root[dir='rtl'] .t-divider,
-  :root[dir='rtl'] .hero-sans {
+  :root[dir='rtl'] .hero-sans,
+  :root[dir='rtl'] .t-value {
     letter-spacing: 0;
   }
   /* Hebrew hero strings are shorter; bump RTL scale so the hero fills the field like EN */
@@ -183,32 +194,267 @@
   to { transform: translateX(-100%); }
 }
 
-/* LED trail cursor (desktop, fine-pointer, motion-ok only) */
-.cursor-trail {
+/* ============================================================
+   Fixed chrome frame (z 40, mix-blend-difference over every section)
+   ============================================================ */
+.frame {
   position: fixed;
   inset: 0;
-  z-index: 90;
+  z-index: 40;
   pointer-events: none;
+  mix-blend-mode: difference;
+  color: #fff;
 }
-.cursor-led {
+.frame a {
+  pointer-events: auto;
+}
+.frame-logo {
+  position: absolute;
+  top: var(--frame-pad);
+  inset-inline-start: var(--frame-pad);
+  font-family: var(--font-serif);
+  font-size: var(--frame-logo-size);
+  line-height: 0.8;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.frame-mark {
+  position: absolute;
+  inset-inline-end: var(--frame-pad);
+  bottom: var(--frame-pad);
+  text-align: end;
+  line-height: 0.85;
+}
+.frame-mark .fm-sub {
+  display: block;
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: calc(var(--frame-logo-size) * 0.32);
+}
+.frame-mark .fm-flip {
+  display: block;
+  transform: scale(-1, -1);
+  font-family: var(--font-serif);
+  font-size: var(--frame-logo-size);
+  line-height: 0.8;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+@media (max-height: 600px) {
+  .frame-mark { display: none; }
+}
+
+/* ============================================================
+   Preloader (z 100).
+   NOTE: everything inside .pl-logo is the Latin "AMIT BAR" wordmark,
+   which is ALWAYS dir="ltr" - physical left/right positioning is
+   intentional there so the document's RTL dir never mirrors the
+   wordmark internals. Do not "fix" these to logical props.
+   ============================================================ */
+.preloader {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background: var(--color-cream);
+  color: var(--color-ink);
+  padding: var(--frame-pad);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+/* the wordmark box that expands during the load sequence.
+   flex-end/flex-end (reference geometry): the group hugs the bottom-right
+   corner, so `height -> 100%` carries it to the .frame-mark resting spot. */
+.pl-logo {
+  position: relative;
+  font-family: var(--font-serif);
+  /* The centered phase plays BIG (reference drama: the letter cascade must
+     dominate the screen); the entrance timeline tweens font-size down to the
+     live .frame-logo size while the box expands, so the shrink and the
+     corner travel resolve together into a pixel-exact landing. */
+  font-size: clamp(3rem, 9vw, 8.5rem);
+  line-height: 0.8;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  /* EXPLICIT rest box (reference: 5.279em x 2.05em) - wide enough that AMIT
+     (top-left) and the long "interior design" line (bottom-right) interleave
+     DIAGONALLY without glyph collision. fit-content collapsed the box to
+     AMIT's width and the italic line ran straight under the letters
+     (user-reported text-on-text). */
+  width: 5.6em;
+  height: 2em;
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-end;
+}
+/* "AMIT" hugs the box's top-left; the group hugs bottom-right. TOP-anchored
+   on purpose - the entrance tweens `top -> 0` while the box height animates,
+   and a top offset is independent of the changing box size (bottom/% would
+   chase a moving target). At top: 0 it lands exactly on .frame-logo
+   (top: --frame-pad). AMIT's line box ends at 0.9em; the group's top line
+   ("interior design") starts at ~0.93em - a near-touch stack, zero overlap. */
+.pl-amit {
+  position: absolute;
+  top: 0.1em;
+  left: 0;
+}
+/* line-height 0.85 mirrors .frame-mark so the landed stack is pixel-identical */
+.pl-group {
+  text-align: right; /* physical: wordmark box is always LTR */
+  line-height: 0.85;
+}
+.pl-sub {
+  display: block;
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 0.32em;
+  text-transform: none;
+  letter-spacing: normal; /* .frame-mark .fm-sub inherits body normal */
+}
+.pl-bar-word {
+  display: block;
+  transform: scale(-1, -1);
+  line-height: 0.8; /* mirrors .frame-mark .fm-flip */
+}
+/* per-character reveal slots. x-only clip: the slide mask is horizontal, and
+   a both-axes clip at line-height 0.8 beheads the italic descender in
+   "design" (the reference's italic word had no descenders). */
+.pl-char {
+  display: inline-block;
+  overflow-x: clip;
+  overflow-y: visible;
+}
+.pl-char > span {
+  display: inline-block;
+  will-change: transform;
+}
+/* progress counter (u-label-like) */
+.pl-num {
+  position: absolute;
+  bottom: var(--frame-pad);
+  inset-inline-end: var(--frame-pad);
+  font-family: var(--font-sans);
+  text-transform: uppercase;
+  letter-spacing: 0.22em;
+  /* reference presence (~1.6rem fluid) - the counter is part of the show */
+  font-size: clamp(1rem, 1.6vw, 1.5rem);
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+}
+/* bottom progress bar; physical left - it fills the full width anyway */
+.pl-progress {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 2px;
+  background: currentColor;
+  width: var(--progress, 0%);
+}
+/* RTL mirror of the landing geometry. The frame corners follow the page
+   direction (logo top-start, mark bottom-end), but everything inside .pl-logo
+   is a hard dir="ltr" island (per-char masks would bidi-reorder otherwise),
+   so its corners are hand-mirrored here to land on the mirrored frame. */
+[dir='rtl'] .pl-logo {
+  justify-content: flex-start; /* group hugs the box's inline-end (left) */
+}
+[dir='rtl'] .pl-amit {
+  left: auto;
+  right: 0; /* lands on .frame-logo at inline-start (right) */
+}
+[dir='rtl'] .pl-group {
+  text-align: left; /* mirrors .frame-mark's text-align: end */
+}
+[dir='rtl'] .pl-num {
+  inset-inline-end: auto; /* own dir is ltr, so this clears `right` */
+  left: var(--frame-pad);
+}
+[dir='rtl'] .pl-progress {
+  left: auto;
+  right: 0;
+}
+
+/* hard scroll lock while the preloader runs. Lenis mounts AFTER the
+   preloader's layout effect, so stopScroll() alone can't cover the first
+   frames; MenuPill also hides on this class. */
+html.is-preloading {
+  overflow: hidden;
+}
+/* the pill must not be reachable/visible under the preloader curtain */
+html.is-preloading .menu-pill {
+  visibility: hidden;
+}
+
+/* ============================================================
+   Menu pill (z 60) - visibility mechanics only; theme colors are
+   applied via Tailwind classes in the component.
+   ============================================================ */
+.menu-pill {
+  opacity: 0;
+  transform: translateY(-0.8rem);
+  pointer-events: none;
+  transition:
+    opacity 0.45s var(--ease-out-expo),
+    transform 0.45s var(--ease-out-expo);
+}
+.menu-pill.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+/* ============================================================
+   Cursor dot (z 80, desktop fine-pointer, motion-ok only).
+   Physical left/top on purpose: positioned from pointer coords.
+   ============================================================ */
+.cursor-dot {
   position: fixed;
   top: 0;
   left: 0;
+  width: 0.75rem;
+  height: 0.75rem;
+  margin: -0.375rem 0 0 -0.375rem;
   border-radius: 9999px;
-  background: var(--color-sage);
-  box-shadow:
-    0 0 6px 1px color-mix(in srgb, var(--color-sage) 90%, transparent),
-    0 0 14px 4px color-mix(in srgb, var(--color-sage) 50%, transparent);
+  background: #fff;
+  mix-blend-mode: difference;
+  z-index: 80;
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
   will-change: transform;
+  transition:
+    width 0.33s cubic-bezier(0.34, 1.56, 0.64, 1),
+    height 0.33s cubic-bezier(0.34, 1.56, 0.64, 1),
+    margin 0.33s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.cursor-dot.is-explore {
+  width: 5.2rem;
+  height: 5.2rem;
+  margin: -2.6rem 0 0 -2.6rem;
+}
+.cursor-dot span {
+  font-family: var(--ui);
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  /* black = identity under mix-blend-difference: the glyphs show the raw
+     backdrop through the inverted disc (white text would vanish into it) */
+  color: #000;
+  opacity: 0;
+  white-space: nowrap;
+  transition: opacity 0.33s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.cursor-dot.is-explore span {
+  opacity: 1;
 }
 
 @media (hover: none), (pointer: coarse) {
-  .cursor-trail { display: none !important; }
+  .cursor-dot { display: none !important; }
 }
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
-  .cursor-trail { display: none !important; }
+  .cursor-dot { display: none !important; }
   *, *::before, *::after {
     animation-duration: 0.001ms !important;
     animation-iteration-count: 1 !important;

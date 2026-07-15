@@ -7,6 +7,12 @@ export const en: Dict = {
 
   brand: { mark: 'is timeless' },
 
+  preloader: { loading: 'Loading' },
+
+  cursor: { explore: 'Explore' },
+
+  frame: { homeAria: 'Amit Bar, home' },
+
   nav: {
     home: 'Home',
     portfolio: 'Portfolio',
@@ -40,6 +46,35 @@ export const en: Dict = {
       { n: '03', title: 'Bespoke', desc: 'A designed fingerprint shaped around the client.' },
     ],
     marquee: ['Interior design', 'Luxury apartments', 'Private homes', 'Commercial spaces', 'Home styling'],
+  },
+
+  // v2 one-long-scroll home: copy for the stage panels (hero handled by `hero`).
+  // manifesto title intentionally reuses portfolio.manifesto - no key here.
+  homeStage: {
+    imagesLabel: 'From our projects',
+    statementEyebrow: 'The studio',
+    statementTitle: 'Every space begins with a dialogue',
+    statementBody:
+      'A modern, elegant signature - clean elements, functionality and a careful connection between materials. This is how a space learns to speak the language of the people who live in it.',
+    darkStatementLead: 'Good design begins with listening',
+    darkStatement:
+      'We uncover what each client truly needs, maximise the space down to the last metre, and connect raw materials into a home that is modern, elegant and precise.',
+    stripWord: 'Values',
+    valuesEyebrow: 'Our values',
+    projectsEyebrow: 'Selected work',
+    projectsIntro:
+      'Every project tells the story of a different home - a luxury apartment, a private house or a commercial space. We walk with each client from the first idea to the handing of the keys, shaping the space around their character and needs. Here is a selection of recent work.',
+    manifestoBody:
+      "If you believe beauty and practicality belong together, we would love to begin the journey with you. Let's talk about your next space.",
+    panelAria: {
+      hero: 'Opening',
+      images: 'Project images',
+      imagesB: 'More from the projects',
+      statement: 'Studio statement',
+      dark: 'Our approach',
+      values: 'Our values',
+      projects: 'Selected projects',
+    },
   },
 
   about: {
@@ -171,6 +206,7 @@ export const en: Dict = {
   },
 
   footer: {
+    featuredLabel: 'Featured project',
     tagline: 'Interior design - luxury apartments, private homes and commercial spaces.',
     nav: 'Navigation',
     contactHeading: 'Get in touch',

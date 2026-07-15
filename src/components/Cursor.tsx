@@ -1,60 +1,93 @@
 import { useEffect, useRef, useState } from 'react';
 import { gsap } from 'gsap';
+import { prefersReduced } from '../motion/anim';
+import { useI18n } from '../i18n/context';
 
 /**
- * LED trail cursor. A chain of glowing sage dots follows the pointer with a
- * soft lag: the head tracks the mouse, each dot trails the one ahead, so it
- * strings into a comet-like LED tail when moving and collapses to one glow when
- * still. Additive only (native cursor stays for a11y); off on touch /
- * reduced-motion.
+ * Reference-style cursor: a single white difference-blend dot that lerps after
+ * the pointer (see reference main.js initCursor). Hovering anything inside a
+ * [data-cursor="explore"] zone grows it into a labelled "explore" disc via the
+ * .is-explore class. Additive only - the native cursor stays for a11y; off on
+ * touch / reduced-motion. Visuals live in .cursor-dot (src/index.css, z 80).
  */
-const COUNT = 16;
-const LERP = 0.3;
+const LERP = 0.18;
 
 export default function Cursor() {
-  const [enabled, setEnabled] = useState(false);
-  const dotsRef = useRef<(HTMLDivElement | null)[]>([]);
+  const { t } = useI18n();
+  const dotRef = useRef<HTMLDivElement>(null);
+
+  // Gate once, lazily (SSR-safe): fine pointer + hover capable + motion OK.
+  const [enabled] = useState(
+    () =>
+      typeof window !== 'undefined' &&
+      window.matchMedia('(hover: hover) and (pointer: fine)').matches &&
+      !prefersReduced(),
+  );
 
   useEffect(() => {
-    const fine = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
-    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (fine && !reduce) setEnabled(true);
-  }, []);
+    const dot = dotRef.current;
+    if (!enabled || !dot) return;
 
-  useEffect(() => {
-    if (!enabled) return;
-    const dots = dotsRef.current.filter(Boolean) as HTMLDivElement[];
-    if (!dots.length) return;
+    // Follow: targets from mousemove, position eased toward them each tick.
+    // Hidden until the first real pointer position - otherwise a lone
+    // difference dot floats dead-centre on every fresh load.
+    let tx = window.innerWidth / 2;
+    let ty = window.innerHeight / 2;
+    let x = tx;
+    let y = ty;
+    let seen = false;
+    dot.style.opacity = '0';
 
-    const setters = dots.map((d) => {
-      gsap.set(d, { xPercent: -50, yPercent: -50 });
-      return { x: gsap.quickSetter(d, 'x', 'px'), y: gsap.quickSetter(d, 'y', 'px') };
-    });
-    const pts = dots.map(() => ({ x: -100, y: -100 }));
-    let mx = -100;
-    let my = -100;
+    const setX = gsap.quickSetter(dot, 'x', 'px');
+    const setY = gsap.quickSetter(dot, 'y', 'px');
+    setX(x);
+    setY(y);
 
-    const move = (e: MouseEvent) => {
-      mx = e.clientX;
-      my = e.clientY;
-    };
-    const tick = () => {
-      let px = mx;
-      let py = my;
-      for (let i = 0; i < pts.length; i++) {
-        pts[i].x += (px - pts[i].x) * LERP;
-        pts[i].y += (py - pts[i].y) * LERP;
-        setters[i].x(pts[i].x);
-        setters[i].y(pts[i].y);
-        px = pts[i].x;
-        py = pts[i].y;
+    const onMove = (e: MouseEvent) => {
+      tx = e.clientX;
+      ty = e.clientY;
+      if (!seen) {
+        // snap to the pointer (no lerp-from-centre) and reveal
+        seen = true;
+        x = tx;
+        y = ty;
+        setX(x);
+        setY(y);
+        dot.style.opacity = '1';
       }
     };
+    const tick = () => {
+      x += (tx - x) * LERP;
+      y += (ty - y) * LERP;
+      setX(x);
+      setY(y);
+    };
 
-    window.addEventListener('mousemove', move, { passive: true });
+    // Grow: document-level delegation on [data-cursor="explore"] zones.
+    const zoneOf = (target: EventTarget | null) =>
+      target instanceof Element ? target.closest('[data-cursor="explore"]') : null;
+
+    const onOver = (e: PointerEvent) => {
+      if (zoneOf(e.target)) dot.classList.add('is-explore');
+    };
+    const onOut = (e: PointerEvent) => {
+      const zone = zoneOf(e.target);
+      if (!zone) return;
+      // Only shrink when the pointer actually left the zone (not moving
+      // between its children).
+      const rel = e.relatedTarget;
+      if (!(rel instanceof Node) || !zone.contains(rel)) dot.classList.remove('is-explore');
+    };
+
+    window.addEventListener('mousemove', onMove, { passive: true });
+    document.addEventListener('pointerover', onOver);
+    document.addEventListener('pointerout', onOut);
     gsap.ticker.add(tick);
+
     return () => {
-      window.removeEventListener('mousemove', move);
+      window.removeEventListener('mousemove', onMove);
+      document.removeEventListener('pointerover', onOver);
+      document.removeEventListener('pointerout', onOut);
       gsap.ticker.remove(tick);
     };
   }, [enabled]);
@@ -62,21 +95,8 @@ export default function Cursor() {
   if (!enabled) return null;
 
   return (
-    <div className="cursor-trail" aria-hidden>
-      {Array.from({ length: COUNT }).map((_, i) => {
-        const t = i / (COUNT - 1);
-        const size = 11 - t * 8; // 11px head -> 3px tail
-        return (
-          <div
-            key={i}
-            ref={(el) => {
-              dotsRef.current[i] = el;
-            }}
-            className="cursor-led"
-            style={{ width: size, height: size, opacity: 1 - t * 0.82, zIndex: COUNT - i }}
-          />
-        );
-      })}
+    <div ref={dotRef} className="cursor-dot" aria-hidden>
+      <span>{t.cursor.explore}</span>
     </div>
   );
 }
