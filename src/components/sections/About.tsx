@@ -2,7 +2,7 @@ import { useI18n } from '../../i18n/context';
 import { Container, EdgeLabel } from '../ui';
 import { Reveal, RevealText, useParallax } from '../../motion/anim';
 
-const ABOUT_IMG = '/projects/private-villa/03.webp';
+const ABOUT_IMG = '/about/amit.webp';
 
 export default function About() {
   const { t } = useI18n();
@@ -31,6 +31,12 @@ export default function About() {
           </p>
         </Reveal>
 
+        <Reveal y={28} delay={0.1}>
+          <p className="mt-10 max-w-3xl text-lg leading-relaxed text-cream/85 md:mt-12 md:text-xl">
+            {t.about.journey}
+          </p>
+        </Reveal>
+
         <div className="mt-20 grid grid-cols-1 gap-12 md:mt-32 md:grid-cols-12 md:gap-16">
           {/* Parallax portrait */}
           <Reveal as="figure" className="md:col-span-6 lg:col-span-7">
@@ -39,6 +45,8 @@ export default function About() {
                 ref={imgRef}
                 src={ABOUT_IMG}
                 alt={t.about.heading}
+                width={900}
+                height={1125}
                 loading="lazy"
                 className="absolute inset-0 h-[115%] w-full -translate-y-[6%] object-cover"
               />

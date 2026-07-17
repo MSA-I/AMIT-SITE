@@ -1,20 +1,18 @@
 import { useI18n } from '../../../i18n/context';
-import { Container, Eyebrow, CornerMark } from '../../ui';
-import { Reveal, RevealText, useDriftX } from '../../../motion/anim';
+import { Container, Eyebrow } from '../../ui';
+import { Reveal, RevealText } from '../../../motion/anim';
 import { HPanel } from '../../../motion/HorizontalStage';
 import { useStage } from '../../../motion/stageContext';
 
 /**
  * Chapter 03 - the big editorial statement (reference .panel--ntitle, 83.6vw).
  * Ours: 80vw cream panel. Headline owns the start ~60%, the paragraph sits
- * offset at the end-bottom (editorial asymmetry), a small eyebrow floats in
- * the start gutter at mid-height and the rotated brand mark drifts in the
- * top-end corner.
+ * offset at the end-bottom (editorial asymmetry) and a small eyebrow floats in
+ * the start gutter at mid-height.
  */
 export default function PanelStatement() {
   const { t } = useI18n();
   const { horizontal } = useStage();
-  const driftRef = useDriftX<HTMLDivElement>(50);
 
   const s = t.homeStage;
   const body = (
@@ -43,14 +41,6 @@ export default function PanelStatement() {
           <Reveal className="absolute bottom-[12vh] end-[6vw] w-[26vw] max-w-md">
             {body}
           </Reveal>
-
-          {/* rotated brand stamp drifting in the top-end corner */}
-          <div ref={driftRef} className="absolute end-[4vw] top-[9vh]">
-            <CornerMark
-              word={t.brand.mark}
-              className="text-xl text-ink/50 md:text-2xl"
-            />
-          </div>
         </>
       ) : (
         <Container>
@@ -66,13 +56,6 @@ export default function PanelStatement() {
 
           <div className="mt-16 flex justify-end md:mt-24">
             <Reveal className="w-full max-w-md">{body}</Reveal>
-          </div>
-
-          <div ref={driftRef} className="mt-16 flex">
-            <CornerMark
-              word={t.brand.mark}
-              className="text-lg text-ink/50 md:text-xl"
-            />
           </div>
         </Container>
       )}

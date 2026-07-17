@@ -3,7 +3,7 @@ import { LangLink } from './ui';
 
 /**
  * FixedFrame - the fixed chrome frame (z 40, mix-blend-difference) that paints
- * the AMIT wordmark top-start and the flipped "interior design / BAR(R)" mark
+ * the AB logo lockup top-start and the flipped "interior design / BAR(R)" mark
  * bottom-end over every section. Pure markup; all styling lives in the scaffold
  * CSS (.frame, .frame-logo, .frame-mark in src/index.css).
  *
@@ -26,7 +26,15 @@ export default function FixedFrame() {
     // landmark the logo link fails axe's region rule (content outside landmarks)
     <div className="frame" role="banner">
       <LangLink to="/" className="frame-logo" aria-label={t.frame.homeAria} data-frame-logo>
-        <span dir="ltr">AMIT</span>
+        {/*
+         * Real AB lockup. The frame paints white (color:#fff) under
+         * mix-blend-mode:difference, so this WHITE logo auto-inverts against the
+         * section beneath it exactly like the old "AMIT" text did - dark strokes
+         * over light sections, light over ink. No theme observer needed (the
+         * frame has none); the blend IS the theme mechanism. alt="" + aria-hidden:
+         * the LangLink already carries the accessible name via aria-label.
+         */}
+        <img src="/brand/ab-logo.png" alt="" aria-hidden draggable={false} />
       </LangLink>
       <span className="frame-mark" aria-hidden data-frame-mark>
         <span className="fm-sub">interior design</span>

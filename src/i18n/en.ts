@@ -59,7 +59,7 @@ export const en: Dict = {
     darkStatementLead: 'Good design begins with listening',
     darkStatement:
       'We uncover what each client truly needs, maximise the space down to the last metre, and connect raw materials into a home that is modern, elegant and precise.',
-    stripWord: 'Values',
+    stripWord: 'Elegance',
     valuesEyebrow: 'Our values',
     projectsEyebrow: 'Selected work',
     projectsIntro:
@@ -81,9 +81,9 @@ export const en: Dict = {
     eyebrow: 'About',
     heading: 'About Amit Bar',
     journey:
-      'Every project is a journey of open dialogue with the client. It begins by identifying their personal needs and desires, continues through inspiration and smart planning that reflect their character, and ends in a finished space that is both refined and practical.',
+      'Hi, my name is Amit Bar and I run a boutique studio specialising in interior planning and design. Our expertise is designing luxury apartments, private homes and commercial spaces. I feel fortunate to have the privilege of taking a space and turning it into a work of art. Every project of mine is a journey of open dialogue with the client. The journey begins by identifying the client personal wishes and needs, continues through inspiration and smart planning that reflect their style and character, and ends in a finished product that is both designed and practical.',
     style:
-      'The studio signature is modern and elegant - clean elements, functionality, and a careful connection between materials.',
+      'The design style that defines the studio is modern and elegant, clean elements, functionality and a connection between materials.',
     valuesHeading: 'We design',
     values: [
       'Service, professionalism and trust',

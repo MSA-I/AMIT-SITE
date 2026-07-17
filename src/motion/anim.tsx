@@ -3,7 +3,7 @@ import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { SplitText } from 'gsap/SplitText';
 import { MorphSVGPlugin } from 'gsap/MorphSVGPlugin';
-import { useStage, stageEdge, isRtl } from './stageContext';
+import { useStage, stageEdge } from './stageContext';
 
 gsap.registerPlugin(ScrollTrigger, SplitText, MorphSVGPlugin);
 export { gsap, ScrollTrigger, MorphSVGPlugin };
@@ -377,47 +377,6 @@ export function useParallax<T extends HTMLElement>(amount = 80) {
         { yPercent: -amount / 10 },
         {
           yPercent: amount / 10,
-          ease: 'none',
-          scrollTrigger: tw
-            ? {
-                trigger: el,
-                containerAnimation: tw,
-                start: () => stageEdge(tw, el, 100),
-                end: () => stageEdge(tw, el, 0),
-                scrub: true,
-              }
-            : { trigger: el.parentElement || el, start: 'top bottom', end: 'bottom top', scrub: true },
-        }
-      );
-    }, el);
-    return () => ctx.revert();
-  }, [amount, inStage, horizontal, tween]);
-  return ref;
-}
-
-/**
- * Horizontal drift (the stage analog of useParallax): xPercent -amount/10 ->
- * +amount/10 scrubbed across the element's pass through the viewport. Inside
- * an active horizontal stage it maps to the pin via numeric containerAnimation
- * edges (enter at the 100% line -> leading edge at the 0% line); outside it
- * uses the vertical top-bottom/bottom-top pattern. RTL negates the direction
- * so the drift always reads with the travel.
- */
-export function useDriftX<T extends HTMLElement>(amount = 80) {
-  const ref = useRef<T>(null);
-  const { inStage, horizontal, tween } = useStage();
-  useLayoutEffect(() => {
-    const el = ref.current;
-    if (!el || prefersReduced()) return;
-    if (inStage && horizontal && !tween) return; // wait for the pin tween
-    const tw = inStage && horizontal ? tween : null;
-    const dir = isRtl() ? -1 : 1;
-    const ctx = gsap.context(() => {
-      gsap.fromTo(
-        el,
-        { xPercent: (dir * -amount) / 10 },
-        {
-          xPercent: (dir * amount) / 10,
           ease: 'none',
           scrollTrigger: tw
             ? {

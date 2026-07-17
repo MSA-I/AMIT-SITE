@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Outlet, useParams, useLocation, Navigate } from 'react-router-dom';
+import { Outlet, useParams, useLocation, useNavigationType, Navigate } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import { LanguageProvider, isLang, useI18n } from '../i18n/context';
 import Menu from './Menu';
@@ -8,8 +8,13 @@ import Cursor from './Cursor';
 import FixedFrame from './FixedFrame';
 import Preloader from './Preloader';
 import PageTransition from './PageTransition';
-import { useSmoothScroll, resetScroll } from '../motion/smooth';
+import { useSmoothScroll, resetScroll, saveScroll, restoreScroll } from '../motion/smooth';
 import { ScrollTrigger } from '../motion/anim';
+
+// Browsers otherwise auto-restore scroll on POP and fight our manual restore.
+if (typeof window !== 'undefined' && 'scrollRestoration' in window.history) {
+  window.history.scrollRestoration = 'manual';
+}
 import { PHONE, EMAIL, INSTAGRAM } from '../lib/paths';
 
 const JSONLD = {
@@ -44,7 +49,8 @@ function RouteH1() {
 
 export default function Layout() {
   const { lang } = useParams();
-  const { pathname } = useLocation();
+  const { pathname, key } = useLocation();
+  const navType = useNavigationType();
   useSmoothScroll();
   // Read synchronously so the first paint picks the correct branch (no remount flip).
   const [reduce] = useState(
@@ -61,9 +67,38 @@ export default function Layout() {
     document.head.appendChild(s);
   }, []);
 
+  // Record the latest scroll offset for THIS history entry, and persist it in
+  // the cleanup that runs just before we leave the entry (key changes on every
+  // navigation), so a later POP back to it can restore where the user was.
   useEffect(() => {
-    resetScroll();
-  }, [pathname]);
+    return () => saveScroll(key);
+  }, [key]);
+
+  // Scroll handling per navigation type:
+  //   PUSH / REPLACE (new destination) -> reset to top (previous behavior).
+  //   POP (back / forward)             -> restore the saved offset for the
+  //                                       destination entry (fall back to top).
+  // Restore is deferred to rAF so the freshly mounted page has laid out, and
+  // restoreScroll() refreshes ScrollTrigger first so the pinned home stage
+  // measures against the new DOM before we seek into its pin range.
+  useEffect(() => {
+    if (navType !== 'POP') {
+      resetScroll();
+      return;
+    }
+    // Two frames: one for React to commit the new DOM, one for layout to settle
+    // (fonts / pinned track) before we jump to the stored offset.
+    let inner = 0;
+    const outer = window.requestAnimationFrame(() => {
+      inner = window.requestAnimationFrame(() => {
+        if (!restoreScroll(key)) resetScroll();
+      });
+    });
+    return () => {
+      window.cancelAnimationFrame(outer);
+      window.cancelAnimationFrame(inner);
+    };
+  }, [pathname, key, navType]);
 
   // Refresh ScrollTrigger once the freshly mounted page is laid out, so its
   // scroll-driven sections measure against the new DOM (not the old route).

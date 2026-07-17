@@ -59,7 +59,7 @@ export default function SelectedWork() {
             <RevealText
               as="h2"
               text={t.portfolio.heading}
-              className="mt-6 font-display text-6xl leading-[0.95] text-ink md:text-8xl"
+              className="mt-6 font-display text-6xl leading-[0.95] text-ink md:text-7xl"
             />
           </div>
           <Reveal>

@@ -50,7 +50,7 @@ export default function Process() {
                 className="border-t border-line py-10 last:border-b md:py-14"
               >
                 <div className="flex flex-col gap-5 md:flex-row md:items-baseline md:gap-12">
-                  <span className="font-display text-6xl leading-[0.9] tabular-nums text-ink sm:text-7xl md:text-9xl">
+                  <span className="font-display text-6xl leading-[0.9] tabular-nums text-ink sm:text-7xl md:text-8xl">
                     {step.n}
                   </span>
 

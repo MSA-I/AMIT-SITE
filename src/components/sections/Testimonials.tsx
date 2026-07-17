@@ -22,7 +22,7 @@ export default function Testimonials() {
         <RevealText
           as="h2"
           text={t.testimonials.heading}
-          className="mt-8 font-display text-6xl leading-[0.95] text-cream md:text-8xl"
+          className="mt-8 font-display text-6xl leading-[0.95] text-cream md:text-7xl"
         />
 
         <div className="mt-16 grid grid-cols-1 gap-x-16 md:mt-24 md:grid-cols-2">

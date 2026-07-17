@@ -12,7 +12,7 @@ export default function Services() {
       data-theme="cream"
       className="relative overflow-hidden bg-cream py-28 text-ink md:py-40"
     >
-      <EdgeLabel className="pointer-events-none absolute end-3 top-28 hidden select-none font-display text-8xl leading-none tracking-tight text-ink/[0.04] lg:block">
+      <EdgeLabel className="pointer-events-none absolute end-3 top-28 hidden select-none font-display text-7xl leading-none tracking-tight text-ink/[0.04] lg:block">
         SERVICES
       </EdgeLabel>
 
@@ -24,7 +24,7 @@ export default function Services() {
           <RevealText
             text={heading}
             as="h2"
-            className="mt-6 font-display text-5xl leading-[0.92] tracking-tight sm:text-6xl md:text-8xl"
+            className="mt-6 font-display text-5xl leading-[0.92] tracking-tight sm:text-6xl md:text-7xl"
           />
         </header>
 

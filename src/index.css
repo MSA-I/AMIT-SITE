@@ -12,10 +12,10 @@
   --color-line: #D2D2CE;      /* hairlines on cream */
   --color-sage: #9A7B4F;      /* the one tiny accent - brass (dots, ®, marks) */
 
-  --font-serif: 'Cormorant', Georgia, serif;         /* LTR display */
-  --font-sans: 'Archivo', system-ui, sans-serif;     /* LTR ui/labels */
+  --font-serif: 'Marcellus', Georgia, serif;         /* LTR display */
+  --font-sans: 'Manrope', system-ui, sans-serif;     /* LTR ui/labels */
   --font-he-serif: 'Frank Ruhl Libre', serif;        /* RTL display */
-  --font-he-sans: 'Heebo', system-ui, sans-serif;    /* RTL ui/labels */
+  --font-he-sans: 'Assistant', system-ui, sans-serif;/* RTL ui/labels */
 
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-io: cubic-bezier(0.65, 0, 0.35, 1);
@@ -126,19 +126,19 @@
   /* ---- oversized editorial type scale (normalisboring-grade) ---- */
   .t-hero {
     font-family: var(--display);
-    font-size: clamp(2.75rem, 8vw + 1rem, 12rem);
+    font-size: clamp(2.75rem, 8vw + 1rem, 9rem);
     line-height: 0.9;
     letter-spacing: -0.02em;
   }
   .t-section {
     font-family: var(--display);
-    font-size: clamp(2rem, 5vw + 0.75rem, 6rem);
+    font-size: clamp(2rem, 5vw + 0.75rem, 5rem);
     line-height: 1;
     letter-spacing: -0.015em;
   }
   .t-divider {
     font-family: var(--display);
-    font-size: clamp(3.5rem, 15vw + 1rem, 19rem);
+    font-size: clamp(3.5rem, 15vw + 1rem, 11rem);
     line-height: 0.8;
     letter-spacing: -0.03em;
   }
@@ -146,14 +146,14 @@
     font-family: var(--ui);
     font-weight: 500;
     text-transform: uppercase;
-    font-size: clamp(2.25rem, 6vw + 0.5rem, 7.5rem);
+    font-size: clamp(2.25rem, 6vw + 0.5rem, 6rem);
     line-height: 0.95;
     letter-spacing: -0.01em;
   }
   /* oversized serif value word (home stage values panel) */
   .t-value {
     font-family: var(--display);
-    font-size: clamp(3rem, 7vw + 1rem, 9.5rem);
+    font-size: clamp(3rem, 7vw + 1rem, 7rem);
     line-height: 0.95;
     letter-spacing: -0.02em;
   }
@@ -175,15 +175,15 @@
   }
   /* Hebrew hero strings are shorter; bump RTL scale so the hero fills the field like EN */
   :root[dir='rtl'] .hero-sans {
-    font-size: clamp(2.5rem, 8vw + 0.5rem, 9rem);
+    font-size: clamp(2.5rem, 8vw + 0.5rem, 7rem);
   }
   :root[dir='rtl'] .t-hero {
-    font-size: clamp(3rem, 10vw + 1rem, 13rem);
+    font-size: clamp(3rem, 10vw + 1rem, 9.5rem);
   }
-  /* italic-serif emphasis only in LTR; Hebrew uses weight/size contrast */
-  :root[dir='ltr'] .hero-em {
-    font-style: italic;
-  }
+  /* Emphasis word inside a display headline. Marcellus (LTR display) ships no
+     true italic, so a faux-oblique would distort. Keep the word upright and
+     lean on the surrounding uppercase-sans contrast of the mixed-type move.
+     Hebrew (Frank Ruhl) uses weight contrast. */
   :root[dir='rtl'] .hero-em {
     font-weight: 600;
   }
@@ -212,11 +212,20 @@
   position: absolute;
   top: var(--frame-pad);
   inset-inline-start: var(--frame-pad);
-  font-family: var(--font-serif);
-  font-size: var(--frame-logo-size);
-  line-height: 0.8;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
+  display: block;
+  line-height: 0;
+}
+/* Real AB lockup (square 1000x1000, "AB" over "interior design"). Sized off
+   --frame-logo-size (the old wordmark cap size): the stacked lockup reads at
+   the right weight in the corner around 1.7x that value. contain keeps the
+   square aspect crisp; block + line-height:0 kill inline descender gap. */
+.frame-logo img {
+  display: block;
+  block-size: calc(var(--frame-logo-size) * 1.7);
+  inline-size: auto;
+  max-inline-size: none;
+  object-fit: contain;
+  user-select: none;
 }
 .frame-mark {
   position: absolute;
@@ -227,9 +236,12 @@
 }
 .frame-mark .fm-sub {
   display: block;
-  font-family: var(--font-serif);
-  font-style: italic;
-  font-size: calc(var(--frame-logo-size) * 0.32);
+  /* Marcellus has no true italic (faux-oblique looks distorted at this size),
+     so this small label rides the UI sans as a clean tracked lockup line. */
+  font-family: var(--font-sans);
+  font-size: calc(var(--frame-logo-size) * 0.28);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
 }
 .frame-mark .fm-flip {
   display: block;
@@ -305,11 +317,12 @@
 }
 .pl-sub {
   display: block;
-  font-family: var(--font-serif);
-  font-style: italic;
-  font-size: 0.32em;
-  text-transform: none;
-  letter-spacing: normal; /* .frame-mark .fm-sub inherits body normal */
+  /* mirrors .frame-mark .fm-sub: UI sans, tracked caps (Marcellus has no
+     italic, so the old faux-oblique serif is gone) */
+  font-family: var(--font-sans);
+  font-size: 0.28em;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
 }
 .pl-bar-word {
   display: block;
@@ -410,9 +423,11 @@ html.is-preloading .menu-pill {
   position: fixed;
   top: 0;
   left: 0;
-  width: 0.75rem;
-  height: 0.75rem;
-  margin: -0.375rem 0 0 -0.375rem;
+  /* the follower rides at gallery-disc scale everywhere, so the big
+     inverted-circle effect from the galleries is the site-wide cursor */
+  width: 3.8rem;
+  height: 3.8rem;
+  margin: -1.9rem 0 0 -1.9rem;
   border-radius: 9999px;
   background: #fff;
   mix-blend-mode: difference;
@@ -428,11 +443,8 @@ html.is-preloading .menu-pill {
     height 0.33s cubic-bezier(0.34, 1.56, 0.64, 1),
     margin 0.33s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
-.cursor-dot.is-explore {
-  width: 5.2rem;
-  height: 5.2rem;
-  margin: -2.6rem 0 0 -2.6rem;
-}
+/* .is-explore no longer resizes - the disc is already at gallery size; the
+   class only reveals the label (span rule below) over explore zones */
 .cursor-dot span {
   font-family: var(--ui);
   font-size: 0.68rem;

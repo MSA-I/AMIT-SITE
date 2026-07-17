@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef } from 'react';
+import { Fragment, useLayoutEffect, useRef } from 'react';
 import { HPanel } from '../../../motion/HorizontalStage';
 import { useStage, stageEdge } from '../../../motion/stageContext';
 import { gsap, prefersReduced } from '../../../motion/anim';
@@ -6,18 +6,23 @@ import SpinningBadge from '../../SpinningBadge';
 import { useI18n } from '../../../i18n/context';
 
 /**
- * Chapter 05 - the narrow kinetic "values" strip (reference .panel--vstrip,
- * 14.8vw -> ours w=15, cream). A decorative palate-cleanser column: a vertical
- * oversized word repeated twice around a tiny spinning brand badge, travelling
- * vertically (y 60vh -> -40vh) scrubbed against the horizontal pin.
- * Fallback / reduced-motion: a small static h-40 divider strip with the word
- * rendered once. Entirely decorative (aria-hidden), no focusable content.
+ * Chapter 05 - the narrow kinetic strip (reference .panel--vstrip, 14.8vw ->
+ * ours w=15, cream). A decorative palate-cleanser column: several vertical
+ * phrases stacked with a spinning brand badge between each one. The column
+ * travels vertically (y 60vh -> -60vh) scrubbed against the horizontal pin, so
+ * the motion follows the scroll and stops when the user stops - it is NOT a
+ * time-based loop.
+ * Fallback / reduced-motion: a small static h-40 divider strip with the first
+ * phrase rendered once. Entirely decorative (aria-hidden), no focusable content.
  */
 export default function PanelStrip() {
   const { t } = useI18n();
   const { horizontal, tween } = useStage();
   const wrapRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
+
+  // The phrases riding the strip (repurposed from the home marquee copy).
+  const phrases = t.home.marquee;
 
   useLayoutEffect(() => {
     // Only the active horizontal stage animates; skip while the pin tween has
@@ -32,7 +37,7 @@ export default function PanelStrip() {
         track,
         { y: '60vh' },
         {
-          y: '-40vh',
+          y: '-60vh',
           ease: 'none',
           scrollTrigger: {
             trigger: panel,
@@ -45,7 +50,7 @@ export default function PanelStrip() {
       );
     }, wrap);
     return () => ctx.revert();
-  }, [horizontal, tween]);
+  }, [horizontal, tween, phrases.length]);
 
   return (
     <HPanel
@@ -59,20 +64,23 @@ export default function PanelStrip() {
         <div ref={wrapRef} aria-hidden="true" className="absolute inset-0">
           <div
             ref={trackRef}
-            className="absolute inset-x-0 top-0 flex flex-col items-center gap-10 will-change-transform"
+            className="absolute inset-x-0 top-0 flex flex-col items-center gap-12 will-change-transform"
           >
-            <span className="t-section font-display whitespace-nowrap rotate-180 [writing-mode:vertical-rl]">
-              {t.homeStage.stripWord}
-            </span>
-            <SpinningBadge size={56} className="shrink-0" />
-            <span className="t-section font-display whitespace-nowrap rotate-180 [writing-mode:vertical-rl]">
-              {t.homeStage.stripWord}
-            </span>
+            {phrases.map((p, i) => (
+              <Fragment key={i}>
+                <span className="t-section font-display whitespace-nowrap rotate-180 [writing-mode:vertical-rl]">
+                  {p}
+                </span>
+                {/* the spinning badge separates every phrase, including a
+                    trailing one so the column reads evenly as it scrubs by */}
+                <SpinningBadge size={56} className="shrink-0" />
+              </Fragment>
+            ))}
           </div>
         </div>
       ) : (
         <span aria-hidden="true" className="t-section font-display">
-          {t.homeStage.stripWord}
+          {phrases[0]}
         </span>
       )}
     </HPanel>

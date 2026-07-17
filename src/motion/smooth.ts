@@ -4,6 +4,46 @@ import { gsap, ScrollTrigger, prefersReduced } from './anim';
 
 let lenisInstance: Lenis | null = null;
 
+/**
+ * Per-history-entry scroll offset store, keyed by React Router's location.key.
+ * Lets a POP (back/forward) navigation restore the exact vertical offset the
+ * user was at for that entry instead of snapping to the top.
+ */
+const scrollStore = new Map<string, number>();
+
+/** Current vertical scroll offset (Lenis virtual scroll, else native window). */
+export function getScroll(): number {
+  if (lenisInstance) return lenisInstance.scroll;
+  return typeof window !== 'undefined' ? window.scrollY : 0;
+}
+
+/** Remember the current scroll offset for a history entry. */
+export function saveScroll(key: string) {
+  scrollStore.set(key, getScroll());
+}
+
+/** Jump (no animation) to an absolute vertical offset. */
+function jumpTo(y: number) {
+  // force: Lenis silently drops scrollTo while stopped (menu open / preloader);
+  // the restore must always win, same rationale as resetScroll below.
+  if (lenisInstance) lenisInstance.scrollTo(y, { immediate: true, force: true });
+  else window.scrollTo(0, y);
+}
+
+/**
+ * Restore the saved offset for a history entry (used on POP). Returns false if
+ * nothing was stored, so the caller can fall back to the default reset. Refresh
+ * ScrollTrigger FIRST so the pinned home stage measures against the new DOM
+ * before we seek into its pin range, then jump on the caller's rAF cadence.
+ */
+export function restoreScroll(key: string): boolean {
+  const y = scrollStore.get(key);
+  if (y === undefined) return false;
+  ScrollTrigger.refresh();
+  jumpTo(y);
+  return true;
+}
+
 /** Start Lenis smooth scroll wired to GSAP ScrollTrigger. Call once in Layout. */
 export function useSmoothScroll() {
   const started = useRef(false);

@@ -1,9 +1,8 @@
-import React, { useRef, useLayoutEffect, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { Link, type LinkProps } from 'react-router-dom';
 import { useI18n } from '../i18n/context';
 import { localePath } from '../lib/paths';
 import { gsap, prefersReduced } from '../motion/anim';
-import { useStage, stageEdge } from '../motion/stageContext';
 
 /** Signature easing curve (mirrors the `--ease-out-expo` CSS token). For Framer/GSAP arrays. */
 export const EASE_EXPO = [0.16, 1, 0.3, 1] as const;
@@ -96,56 +95,6 @@ export const SlideLabel: React.FC<{ children: React.ReactNode; className?: strin
     </span>
   </span>
 );
-
-/**
- * CornerMark - recurring decorative rotated brand stamp (the reference's "is BORING(R)" mark).
- * Static 180deg; under motion it drifts a few degrees on scroll. aria-hidden, inherits color.
- * Stage-aware (MOTION API contract): inside an active horizontal stage the
- * drift scrubs against the pin tween via numeric stageEdge positions; the
- * effect skips while the tween has not landed yet. Outside a stage (vertical
- * pages) the plain vertical trigger builds exactly as before.
- */
-export const CornerMark: React.FC<{ word: string; className?: string }> = ({ word, className = '' }) => {
-  const ref = useRef<HTMLSpanElement>(null);
-  const { inStage, horizontal, tween } = useStage();
-  useLayoutEffect(() => {
-    const el = ref.current;
-    if (!el || prefersReduced()) return;
-    if (inStage && horizontal && !tween) return; // wait for the pin tween
-    const tw = inStage && horizontal ? tween : null;
-    const ctx = gsap.context(() => {
-      gsap.fromTo(
-        el,
-        { rotation: 172 },
-        {
-          rotation: 188,
-          ease: 'none',
-          scrollTrigger: tw
-            ? {
-                trigger: el,
-                containerAnimation: tw,
-                start: () => stageEdge(tw, el, 100),
-                end: () => stageEdge(tw, el, 0),
-                scrub: true,
-              }
-            : { trigger: el, start: 'top bottom', end: 'bottom top', scrub: true },
-        }
-      );
-    }, el);
-    return () => ctx.revert();
-  }, [inStage, horizontal, tween]);
-  return (
-    <span
-      ref={ref}
-      aria-hidden
-      className={`pointer-events-none select-none font-display ${className}`}
-      style={{ transform: 'rotate(180deg)' }}
-    >
-      {word}
-      <span className="align-top text-sage" style={{ fontSize: '0.45em' }}>®</span>
-    </span>
-  );
-};
 
 /**
  * FillButton - pill button/link whose ink fill sweeps in from the edge the

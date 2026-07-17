@@ -3,10 +3,10 @@ import { Container, Eyebrow } from '../ui';
 import { Reveal, RevealText, useParallax } from '../../motion/anim';
 
 const AMBIENT: Record<string, string> = {
-  concrete: '/projects/luxury-apartment/05.webp',
-  wood: '/projects/private-villa/04.webp',
-  vegetation: '/projects/modern-home/03.webp',
-  brass: '/projects/modern-penthouse/07.webp',
+  concrete: '/materials/concrete.webp',
+  wood: '/materials/wood.webp',
+  vegetation: '/materials/vegetation.webp',
+  brass: '/materials/brass.webp',
 };
 
 function MaterialRow({
@@ -29,7 +29,7 @@ function MaterialRow({
         <span className="block font-display text-lg leading-none tabular-nums text-cream/60">
           {index}
         </span>
-        <h3 className="mt-4 font-display text-6xl leading-[0.9] tracking-tight md:text-8xl">
+        <h3 className="mt-4 font-display text-6xl leading-[0.9] tracking-tight md:text-7xl">
           {name}
         </h3>
       </div>

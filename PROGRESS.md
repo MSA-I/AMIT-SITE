@@ -73,6 +73,28 @@
 
 ## Progress Log (newest first)
 
+### 2026-07-17 — 10-task revision pass + live follow-ups (wip)
+- What: real AB logo in `FixedFrame` (replaces the "AMIT" text; rides the existing mix-blend);
+  removed the drifting brand mark (`CornerMark` + `useDriftX` deleted) and the footer MorphSVG
+  wordmark (`footer/BarWordmark.tsx` deleted) plus the footer featured-project card; `PanelStrip`
+  rebuilt as a scroll-scrubbed multi-phrase column (`home.marquee`) with a `SpinningBadge` between
+  every phrase; back-navigation scroll restore (`history.scrollRestoration='manual'`, per
+  `location.key` save/restore in `smooth.ts` + `Layout`); display type scale tamed (`.t-*` clamp
+  maxes lowered, `CTASection` 28rem→14rem, inline `text-8xl/9xl` reductions); About section renders
+  the verbatim original Hebrew bio + Amit's real portrait (`public/about/amit.webp`); modern-home
+  gallery cleaned (6 off-brand stock images removed; 01/02/09/10 kept); Materials now use 4
+  AI-generated textures (`public/materials/`, Higgsfield GPT Image 2, 4:3 2K); fonts swapped to
+  Marcellus / Manrope / Assistant (Frank Ruhl kept) with faux-italic fixes (`fm-sub`, `pl-sub`,
+  `hero-em` upright); `stripWord` value refreshed; cursor follower now rides at gallery-disc scale
+  (3.8rem) site-wide, `.is-explore` only reveals the label.
+- Why: user's 10-item revision list + live follow-ups (strip loop→scroll-scrub with badge
+  separators, cursor disc sizing rounds).
+- Verified: tsc + build clean; Playwright screenshots (home/about, HE+EN, frame corners); zero
+  em/en-dashes in `src/`; footer contains no `/portfolio/` links; built CSS spot-checked.
+- Follow-ups: preloader intro still resolves as "AMIT" text before the frame's logo image appears
+  (small pop at curtain-hide, needs an entrance re-choreo to fix); `scripts/shots.mjs` needs the
+  pinned Playwright chromium (1155) which failed to download here.
+
 ### 2026-07-15c — preloader lockup collision fix (wip)
 - What: user screenshot - "interior design" ran under AMIT's glyphs in the opening lockup.
   fit-content collapsed .pl-logo to AMIT's width; replaced with the reference's explicit rest box

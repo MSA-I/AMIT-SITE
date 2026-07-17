@@ -41,7 +41,7 @@ images, colours, or fonts, and never edit that folder.
 
 ## Design system (LOCKED — editorial-kinetic, near-monochrome)
 - **Palette:** cream `#F2EEE6`, ink `#0E0E0E`, paper `#FFFFFF`, line `#D9D4C8`, muted `ink-soft #4A4742`. ONE accent **sage `#6E8B7B`** used ONLY tiny: the `.accent-dot`, the `®`, hover/active. Never large sage text/areas.
-- **Type:** display = high-contrast serif (Bodoni Moda LTR / Frank Ruhl Libre RTL, via `font-display`, auto by `dir`); ui/labels = Archivo (LTR) / Heebo (RTL) via `font-sans` + the `.u-label` class. Big headings: `font-display`, oversized (vw / text-6xl..9xl), tight leading.
+- **Type:** display = serif (Marcellus LTR / Frank Ruhl Libre RTL, via `font-display`, auto by `dir`; Marcellus is single-weight, no italic - never faux-oblique it); ui/labels = Manrope (LTR) / Assistant (RTL) via `font-sans` + the `.u-label` class. Big headings: `font-display`, sized by the `.t-*` clamp tokens in `src/index.css`, tight leading.
 - **Mixed-type move (LTR only):** uppercase `font-sans` + an *italic* `font-display` emphasis word. Hebrew has no italic → use weight/size contrast.
 - **Color-block rhythm:** sections are self-contained and alternate light/dark via `data-theme="cream|ink|paper"` (dark = `bg-ink text-cream`). Never place two `ink` sections adjacent. The fixed header adapts its color to the section under it (shared `useHeaderTheme` hook used by `Menu` + `ScrollLogo`).
 - **Shape:** no rounded corners except pill buttons. Hairlines over shadows. Low density, big whitespace.
